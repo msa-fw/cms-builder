@@ -1,0 +1,66 @@
+@import "vars";
+
+body{
+    max-width: @docMaxWidth;
+    margin: auto;
+    h1,h2,h3,h4,h5{
+        margin: 0;
+    }
+    &.body-container{
+        .header{}
+        .content{
+            &.content-block{
+                .controller{
+                    display: flex;
+                    &.controller-block{
+                        .action{
+                            width: @docMaxWidth;
+                            &.action-block{
+                                .error {
+                                    text-align: center;
+                                    border: solid 6px rgba(0, 0, 0, 0.15);
+                                    .code {
+                                        color: @bootstrap-danger;
+                                        font-size: 180px;
+                                        font-weight: bold;
+                                    }
+                                    .head {
+                                        font-size: 50px;
+                                        text-transform: uppercase;
+                                        font-weight: bold;
+                                        color: @bootstrap-orange;
+                                    }
+                                    .body {
+                                        font-weight: bold;
+                                        font-size: 25px;
+                                        color: @bootstrap-gray;
+                                    }
+                                    &.error-401 {
+                                    }
+                                    &.error-403 {
+                                    }
+                                    &.error-404 {
+                                    }
+                                    &.error-405 {
+                                    }
+                                    &.error-500 {
+                                    }
+                                }
+                            }
+                            .controller-content{
+                                &.action-content-block{
+                                    margin: 0;
+                                    min-height: 640px;
+                                    border: solid 1px #ccc;
+                                    padding: 4px 6px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .footer{
+        }
+    }
+}

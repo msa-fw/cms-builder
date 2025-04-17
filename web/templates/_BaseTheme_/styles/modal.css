@@ -1,0 +1,107 @@
+.modal-window {
+  width: 100%;
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+  font-weight: normal;
+}
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+.modal-window .modal-body {
+  background-color: #fefefe;
+  margin: 1% auto;
+  padding: 0 0 20px 0;
+  width: 80%;
+  height: 80%;
+  color: #000;
+  border-radius: 12px;
+  border: 8px solid rgba(0, 0, 0, 0.3);
+}
+.modal-window .modal-body .modal-body-content {
+  height: 90%;
+  overflow: auto;
+  padding: 0 20px;
+}
+.modal-window .modal-body .modal-body-content ol {
+  margin: 0;
+}
+.modal-window .modal-body .modal-body-content .ajax-loader img {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  position: absolute;
+}
+.modal-window .modal-header {
+  border-bottom: solid 1px #ccc;
+  display: flex;
+}
+.modal-window .modal-header h2 {
+  margin: 0;
+  width: 100%;
+  padding-left: 40px;
+  padding-top: 6px;
+}
+.modal-window .modal-header .buttons {
+  height: 40px;
+  position: relative;
+}
+.modal-window .modal-header .buttons .buttons-position {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.modal-window .modal-header .buttons .buttons-position .modal-button-close {
+  background: red;
+  color: white;
+  padding: 10px 30px;
+  cursor: pointer;
+  border-radius: 0 4px 0 0;
+}
+.modal-window .modal-header .buttons .buttons-position .modal-button-close:hover {
+  opacity: 0.7;
+}
+.modal-window .modal-footer {
+  border-top: solid 1px #ccc;
+}
+.modal-window .modal-footer .buttons {
+  display: flex;
+  float: right;
+}
+.modal-window .modal-footer .buttons .button {
+  margin: 0 20px;
+}
+.modal-window .modal-footer .buttons .button .modal-button {
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 40px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.modal-window .modal-footer .buttons .button .modal-button.modal-button-success {
+  background: #28a745;
+}
+.modal-window .modal-footer .buttons .button .modal-button.modal-button-discard {
+  background: #dc3545;
+}
+.modal-window .modal-footer .buttons .button .modal-button:hover {
+  opacity: 0.4;
+  cursor: pointer;
+}

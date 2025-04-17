@@ -1,0 +1,43 @@
+body {
+  max-width: 1440px;
+  margin: auto;
+}
+body h1,
+body h2,
+body h3,
+body h4,
+body h5 {
+  margin: 0;
+}
+body.body-container .content.content-block .controller {
+  display: flex;
+}
+body.body-container .content.content-block .controller.controller-block .action {
+  width: 1440px;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .error {
+  text-align: center;
+  border: solid 6px rgba(0, 0, 0, 0.15);
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .error .code {
+  color: #dc3545;
+  font-size: 180px;
+  font-weight: bold;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .error .head {
+  font-size: 50px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #fd7e14;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .error .body {
+  font-weight: bold;
+  font-size: 25px;
+  color: #6c757d;
+}
+body.body-container .content.content-block .controller.controller-block .action .controller-content.action-content-block {
+  margin: 0;
+  min-height: 640px;
+  border: solid 1px #ccc;
+  padding: 4px 6px;
+}

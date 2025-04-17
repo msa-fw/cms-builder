@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @var HTML $render
+ * @var array $data
+ * @var Result $widget
+*/
+
+use System\Core\Response;
+use Controllers\_Controller_\Widget;
+use System\Core\Widget\Result;
+use System\Core\Template\Render\HTML;
+
+use function web\templateHttp;
+
+HTML::addJs(templateHttp('Controllers/_Controller_/scripts/_Controller_'));
+HTML::addCss(templateHttp('Controllers/_Controller_/styles/_Controller_'));
+
+
+$render->simpleVariable = 'simple value';
+
+$content = Response::response('content');
+
+$form = Response::response('form');
+
+?>
+
+<?php if(Widget::_Controller_Top()->render()->set($widget)->exist()){ ?>
+    <div class="widget-block widget-_Controller_-top">
+        <?php $widget->print() ?>
+    </div>
+<?php } ?>
+
+
+<div id="_Controller_-_Action_Action" class="action-content-block controller-content">
+    <?php $content->array()->loop(function($item)use($render){ ?>
+        <div class="item">
+<!--            --><?php //print $item['id'] ?><!-- (--><?php //print $item['name'] ?><!--): --><?php //print $render->simpleVariable; ?>
+        </div>
+    <?php }) ?>
+
+    <div class="controller-form">
+        <?php print $render->renderForm($form) ?>
+    </div>
+
+    <?php if(Widget::body()->render()->set($widget)->exist()){ ?>
+        <div class="widget-block widget-body">
+            <?php $widget->print() ?>
+        </div>
+    <?php } ?>
+</div>
+
+<?php if(Widget::_Controller_Bottom()->render()->set($widget)->exist()){ ?>
+    <div class="widget-block widget-_Controller_-bottom">
+        <?php $widget->print() ?>
+    </div>
+<?php } ?>

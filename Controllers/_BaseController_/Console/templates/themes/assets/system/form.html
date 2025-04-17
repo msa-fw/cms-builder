@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @var HTML $render
+ * @var array $data
+ */
+
+use System\Core\Template\Render\HTML;
+
+use function web\templateHttp;
+use function templates\attributes2string;
+
+HTML::addCss(templateHttp('styles/form'));
+HTML::addJs(templateHttp('scripts/form'));
+
+?>
+
+<div class="form-center-position">
+    <div class="form">
+        <div class="from-title"><h1><?php print $data['title'] ?></h1></div>
+
+        <div class="from-description"><h3><?php print $data['description'] ?></h3></div>
+
+        <div class="form-body <?php print $data['attributes']['class'] ?>">
+
+            <form <?php print attributes2string($data['attributes']) ?>>
+                <div class="form-fields">
+                    <?php foreach($data['fields'] as $fieldSet => $fields){ ?>
+                        <fieldset class="fields-set fields-set-<?php print $fieldSet ?>">
+                            <?php print $render->renderFields($data['name'], $fields) ?>
+                        </fieldset>
+                    <?php } ?>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

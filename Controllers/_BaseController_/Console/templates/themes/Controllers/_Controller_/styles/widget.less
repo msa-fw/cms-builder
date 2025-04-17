@@ -1,0 +1,104 @@
+@import "../../../styles/vars";
+
+.widget-content{
+    .widget-DebugWidget{
+        margin: -6px -12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        > a > .key, > div > .key{
+            color: @bootstrap-white;
+            background: @generalColor;
+            padding: 2px 0;
+        }
+        a > .value, > div > .value{
+            color: @bootstrap-white;
+            background: @bootstrap-green;
+            min-width: 30px;
+            padding: 2px 0;
+        }
+        a{
+            color: @bootstrap-white;
+            border: solid 1px;
+            text-decoration: none;
+            &:hover{
+                opacity: 0.4;
+            }
+        }
+        .debug-value{
+            width: 100%;
+            text-align: center;
+            margin: 2px;
+            //padding: 6px 0;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        ol{
+            li{
+                &.ol-list-item{
+                    position: relative;
+                    .button-copy{
+                        position: absolute;
+                        right: 0;
+                        background: green;
+                        color: white;
+                        padding: 4px 10px;
+                        top: 0;
+                        border-radius: 0 0 0 18px;
+                        cursor: pointer;
+                        &:hover{
+                            opacity: 0.5;
+                        }
+                    }
+                }
+            }
+        }
+        .debug-item{
+            border-bottom: solid 4px @bootstrap-magenta;
+            padding-bottom: 4px;
+            .query{
+                .value{
+                    color: #5617c8;
+                    background: rgba(5, 6, 28, 0.05);
+                }
+                .head{
+                    padding: 6px;
+                }
+            }
+            .value{
+                font-weight: bold;
+                padding: 2px 12px;
+                &.danger{
+                    background: @bootstrap-white;
+                    color: @bootstrap-danger;
+                }
+                &.normal{
+                    background: @bootstrap-white;
+                    color: @bootstrap-success;
+                }
+            }
+            .query{
+                //font-weight: bold;
+            }
+            .time{
+                //font-weight: bold;
+            }
+            .class-method{
+                .class{
+                    //font-weight: bold;
+                }
+                .method{
+                    //    font-weight: bold;
+                }
+            }
+            .file-line{
+                .file{
+                    //font-weight: bold;
+                }
+                .line{
+                    //font-weight: bold;
+                }
+            }
+        }
+    }
+}

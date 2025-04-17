@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @var array $data
+ */
+
+$get = '';
+$arguments = '';
+
+if($data['arguments']){
+    $arguments = http_build_query($data['arguments']);
+
+    if(mb_strtolower($data['method']) == 'get'){
+        $get = "?" . $arguments;
+    }
+}
+
+?>
+<script>
+    window.<?php print $data['ajaxObjectName'] ?> = {};
+
+    window.<?php print $data['ajaxObjectName'] ?> = {
+        ajax: new XMLHttpRequest(),
+        params: '',
+        timeout: <?php print $data['timeout'] ?>,
+        selector: '<?php print $data['selector'] ?>',
+
+        open: function(){
+            this.ajax.open('<?php print $data['method'] ?>', '<?php print $data['link'] . $get ?>', <?php print($data['async'] ? 'true' : 'false') ?>);
+            return this;
+        },
+        send: function(){
+            this.ajax.send(this.params);
+            return this;
+        },
+        onerror: function(callback){
+            if(callback){
+                let request = this;
+                this.ajax.onerror = function(){
+                    if(request.ajax.status >= 400){
+                        (callback)(request.ajax);
+                    }
+                }
+            }else{
+                this.ajax.onerror = function(){
+                    <?php print $data['onError'] ?>
+                }
+            }
+            return this;
+        },
+        onreadystatechange: function(callback){
+            if(callback){
+                let request = this;
+                this.ajax.onreadystatechange = function(){
+                    if(request.ajax.readyState == 4/* && request.ajax.status == 200*/){
+                        return (callback)(request.ajax);
+                    }
+                }
+            }else{
+                this.ajax.onreadystatechange = function(){
+                    <?php print $data['onReadyStateChange'] ?>
+                }
+            }
+            return this;
+        },
+        headers: function(){
+            <?php foreach($data['headers'] as $key => $header){ ?>
+                this.ajax.setRequestHeader('<?php print $key ?>', '<?php print $header ?>');
+            <?php } ?>
+            return this;
+        },
+        request: function(){
+            this.params = '<?php print $arguments ?>';
+            return this;
+        },
+    };
+</script>

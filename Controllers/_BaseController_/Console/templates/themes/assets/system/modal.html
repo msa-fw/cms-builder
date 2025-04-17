@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @var array $data
+ */
+
+use System\Core\Template\Render\HTML;
+
+use function web\render;
+use function web\templateHttp;
+use function web\templateRoot;
+
+HTML::addCss(templateHttp('styles/modal'), HTML::SCRIPT_STYLE_POSITION_FOOTER);
+
+$hash = '';
+
+if($data['ajax']){
+    $data['ajax']['selector'] = "#{$data['id']}";
+    $data['ajax']['ajaxObjectName'] = 'Hash' . md5(microtime(true) . uniqid());
+
+    $hash = ", {$data['ajax']['ajaxObjectName']}";
+
+    print render(templateRoot($data['ajax']['template']), $data['ajax']);
+
+    $data['content'] = '<div class="ajax-loader"><img src="' . templateHttp($data['ajax']['loader']) . '"></div>';
+}
+
+?>
+<a href="javascript:void(0)" class="modal-link <?php print $data['class'] ?>" onclick="mainObj.modal.open('#<?php print $data['id'] ?>'<?php print $hash ?>)">
+    <?php print $data['value'] ?>
+</a>
+
+<div class="modal-window" id="<?php print $data['id'] ?>">
+    <div class="modal-body" style="<?php print($data['size'] ? "max-width: {$data['size']}px" : '') ?>">
+        <div class="modal-header">
+            <h2><?php print $data['title'] ?></h2>
+            <div class="buttons">
+                <div class="buttons-position">
+                    <div class="modal-button-close" onclick="mainObj.modal.close('#<?php print $data['id'] ?>')">X</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body-content">
+            <div class="modal-body-text-parent">
+                <div class="modal-body-text"><?php print $data['content'] ?></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="buttons">
+                <?php foreach($data['buttons'] as $button){ ?>
+                    <div class="button">
+                        <button class="modal-button <?php print $button['class'] ?>"<?php print $button['handler'] ?>><?php print $button['value'] ?></button>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+</div>

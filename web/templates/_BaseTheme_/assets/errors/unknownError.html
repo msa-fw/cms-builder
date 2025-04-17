@@ -1,0 +1,15 @@
+<?php
+
+use System\Core\Language;
+
+/**
+ * @var int $code
+ */
+
+?>
+
+<div class="row error error-unknown">
+    <div class="code"><?php print $code ?></div>
+    <div class="head"><?php print Language::System('error.page.unknown.head')->returnKey() ?></div>
+    <div class="body"><?php print Language::System('error.page.unknown.body')->string(true)->replace_k2v(array('%code%' => $code)) ?></div>
+</div>

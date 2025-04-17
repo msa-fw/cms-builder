@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * @var string $title
+ * @var string $data
+ * @var string $data
+ * @var callable $callback
+ * @var string $templateFile
+ * @var array $arguments
+ * @var array $options
+ * @var array|bool|int|string|object|resource|callable|mixed $result
+ */
+
+use System\Core\Debug;
+use System\Core\Template;
+use Controllers\_BaseController_\Language;
+use System\Core\Template\Render\HTML;
+
+use function templates\n2br;
+use function templates\modal;
+use function web\templateHttp;
+
+HTML::addJs(templateHttp('Controllers/_BaseController_/scripts/widget'));
+HTML::addCss(templateHttp('Controllers/_BaseController_/styles/widget'));
+
+$pubDir = \web\http('/');
+
+?>
+
+<div class="widget-child widget-DebugWidget DebugWidget">
+    <div class="debug-value">
+        <?php print Language::_BaseController_('widgets.widget.debug.pageGenerationTime')
+            ->string(true)->replace_k2v(array('%total%' => number_format(microtime(true) - DEBUG_START_TIME, 5))) ?>
+    </div>
+    <div class="debug-value">
+        <?php print Language::_BaseController_('widgets.widget.debug.templateGenerationTime')
+            ->string(true)->replace_k2v(array('%total%' => number_format(Template::getGenTime(microtime(true)), 5))) ?>
+    </div>
+    <div class="debug-value">
+        <?php print Language::_BaseController_('widgets.widget.debug.memory')
+            ->string(true)->replace_k2v(array('%total%' => number_format((memory_get_usage() - DEBUG_MEMORY_USAGE)/1024, 3))) ?>
+    </div>
+    <div class="debug-value">
+        <?php print Language::_BaseController_('widgets.widget.debug.memoryMax')
+            ->string(true)->replace_k2v(array('%total%' => number_format((memory_get_peak_usage())/1024, 3))) ?>
+    </div>
+
+    <?php foreach(Debug::getDebugs() as $key => $items){
+        $total = count($items);
+
+        $body = '';
+        if($items){ ob_start(); ?>
+            <ol>
+                <?php foreach($items as $id => $item){ ?>
+                    <?php $time = $item['endTime'] - $item['startTime'] ?>
+
+                    <li class="ol-list-item">
+                        <div class="copy button-copy" onclick="mainObj.copyText(this, '#<?php print $key.$id ?> .query .value')">copy</div>
+                        <div class="debug debug-item debug-<?php print $key ?>" id="<?php print $key.$id ?>">
+                            <div class="block query">
+                                <div class="head">Query:</div>
+                                <div class="value"><?php print n2br($item['query']) ?></div></div>
+                            <div class="block time">
+                                <span class="head">Time:</span>
+                                <span class="value<?php print($time>0.1 ? ' danger' : ' normal') ?>"><?php print number_format($time, 10, '.', ' ') ?></span>
+                            </div>
+                            <div class="block class-method">
+                                <span class="head">Initiator:</span>
+                                <span class="value">
+                                    <?php if($item['class']){ ?>
+                                        <span class="class"><?php print $item['class'] ?></span>
+                                    <?php } ?>
+                                        <?php if($item['method']){ ?>
+                                            <span class="method">&rArr; <?php print $item['method'] ?>()</span>
+                                        <?php } ?>
+                                </span>
+                            </div>
+                            <div class="block file-line">
+                                <span class="head">File:</span>
+                                <?php if($item['file']){ ?>
+                                    <span class="value">
+                                        <span class="file"><?php print str_replace(array(ROOT, $pubDir, '//'), array('/','/','/'), $item['file']) ?></span>
+                                    <span class="line">(<?php print $item['line'] ?>)</span>
+                                </span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </li>
+                <?php } ?>
+            </ol>
+        <?php
+            $body = ob_get_clean();
+        }
+
+        $upperKey = mb_strtoupper($key);
+
+        print modal(Language::_BaseController_("widgets.widget.debug.{$key}LinkValue")->string(true)->replace_k2v(array('%total%' => $total)))
+            ->body($body)->linkClass('debug-value')
+            ->title(Language::_BaseController_("widgets.widget.debug.{$key}Title")->string(true)->replace_k2v(array('%total%' => $total)))->render();
+    } ?>
+
+    <?php
+        $files = get_included_files();
+        $total = count($files);
+
+        ob_start();
+    ?>
+    <ol>
+        <?php foreach($files as $file){ ?>
+            <li>
+                <div class="debug debug-item debug-files">
+                    <div class="block file-line">
+                        <span class="file"><?php print str_replace(array(ROOT, $pubDir, '//'), array('/','/','/'), $file) ?></span>
+                    </div>
+                </div>
+            </li>
+        <?php } ?>
+    </ol>
+    <?php
+        $body = ob_get_clean();
+
+        print modal(Language::_BaseController_('widgets.widget.debug.filesLinkValue')->string(true)->replace_k2v(array('%total%' => $total)))
+            ->body($body)->size(\System\Helpers\Classes\Render\Modal::SIZE_LARGE)
+            ->linkClass('debug-value')
+            ->title(Language::_BaseController_("widgets.widget.debug.filesTitle")->string(true)->replace_k2v(array('%total%' => $total)))->render();
+    ?>
+
+    <?php
+        $classes = get_declared_classes();
+        $total = 0;
+
+        ob_start();
+    ?>
+    <ol>
+        <?php foreach($classes as $class){ ?>
+            <?php
+                if(stripos($class, 'Controllers') !== false || stripos($class, 'System') !== false){
+                $total++;
+                ?>
+                <li>
+                    <div class="debug debug-item debug-classes">
+                        <div class="block class-line">
+                            <span class="class">new <?php print $class ?>()</span>
+                        </div>
+                    </div>
+                </li>
+            <?php } ?>
+        <?php } ?>
+    </ol>
+    <?php
+        $body = ob_get_clean();
+
+        print modal(Language::_BaseController_('widgets.widget.debug.classesLinkValue')->string(true)->replace_k2v(array('%total%' => $total)))
+            ->body($body)
+            ->linkClass('debug-value')
+            ->title(Language::_BaseController_("widgets.widget.debug.classesTitle")->string(true)->replace_k2v(array('%total%' => $total)))->render();
+    ?>
+</div>

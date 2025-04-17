@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @var HTML $render
+ * @var array $data
+ * @var array $field
+ * @var array $fields
+ * @var string $value
+ * @var string $formName
+ * @var string $fieldName
+ */
+
+use System\Core\Template\Render\HTML;
+use function templates\attributes2string;
+
+?>
+
+<div class="field input-field input-field-<?php print $field['attributes']['class'] ?> <?php print $field['type'] ?>">
+    <input type="<?php print $field['type'] ?>" name="<?php print $fieldName ?>" value="<?php print $value ?>" <?php print attributes2string($field['attributes']) ?> />
+</div>

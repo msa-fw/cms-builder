@@ -1,0 +1,73 @@
+.widget-content .widget-DebugWidget {
+  margin: -6px -12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.widget-content .widget-DebugWidget > a > .key,
+.widget-content .widget-DebugWidget > div > .key {
+  color: #fff;
+  background: #0057ae;
+  padding: 2px 0;
+}
+.widget-content .widget-DebugWidget a > .value,
+.widget-content .widget-DebugWidget > div > .value {
+  color: #fff;
+  background: #28a745;
+  min-width: 30px;
+  padding: 2px 0;
+}
+.widget-content .widget-DebugWidget a {
+  color: #fff;
+  border: solid 1px;
+  text-decoration: none;
+}
+.widget-content .widget-DebugWidget a:hover {
+  opacity: 0.4;
+}
+.widget-content .widget-DebugWidget .debug-value {
+  width: 100%;
+  text-align: center;
+  margin: 2px;
+  font-weight: bold;
+  font-size: 12px;
+}
+.widget-content .widget-DebugWidget ol li.ol-list-item {
+  position: relative;
+}
+.widget-content .widget-DebugWidget ol li.ol-list-item .button-copy {
+  position: absolute;
+  right: 0;
+  background: green;
+  color: white;
+  padding: 4px 10px;
+  top: 0;
+  border-radius: 0 0 0 18px;
+  cursor: pointer;
+}
+.widget-content .widget-DebugWidget ol li.ol-list-item .button-copy:hover {
+  opacity: 0.5;
+}
+.widget-content .widget-DebugWidget .debug-item {
+  border-bottom: solid 4px #740063;
+  padding-bottom: 4px;
+}
+.widget-content .widget-DebugWidget .debug-item .query .value {
+  color: #5617c8;
+  background: rgba(5, 6, 28, 0.05);
+}
+.widget-content .widget-DebugWidget .debug-item .query .head {
+  padding: 6px;
+}
+.widget-content .widget-DebugWidget .debug-item .value {
+  font-weight: bold;
+  padding: 2px 12px;
+}
+.widget-content .widget-DebugWidget .debug-item .value.danger {
+  background: #fff;
+  color: #dc3545;
+}
+.widget-content .widget-DebugWidget .debug-item .value.normal {
+  background: #fff;
+  color: #28a745;
+}

@@ -1,0 +1,158 @@
+@import "vars";
+
+
+.form{
+    border: solid 1px #ccc;
+    border-radius: 4px;
+    padding-bottom: 1em;
+
+    .from-title{
+        text-align: center;
+        font-weight: bold;
+        background: rgba(0, 0, 0, 0.08);
+        padding: 8px 0;
+    }
+    .from-description{
+        margin: 1em;
+        font-weight: bold;
+    }
+    .form-body{
+        .form-fields{
+            .field-errors{
+                border: solid 1px @bootstrap-danger;
+                margin: 0 1em;
+                .field-error{
+                    background: @bootstrap-danger;
+                    color: @bootstrap-white;
+                    padding: 4px 8px;
+                    margin: 2px;
+                }
+            }
+            fieldset{
+                border: none;
+                padding: 0;
+                margin: 0;
+                .field-set{
+                    margin: 0 1em;
+                    padding: 8px 0;
+                    border-bottom: solid 1px #999;
+                    margin-bottom: 1em;
+                    .form-field{
+                        .field{
+                            padding: 0.5em 0;
+                            &.submit-field{
+                                max-width: 300px;
+                                margin: auto;
+                                padding: 0;
+                            }
+                            .input{
+                                box-sizing: border-box;
+                                width: 100%;
+                                height: 40px;
+                                margin: 0.25em 0;
+                                //padding: 0 1em;
+                                &.submit{
+                                    margin: auto;
+                                    min-width: 200px;
+                                }
+                            }
+                            &.input-field{}
+                        }
+                    }
+                    .field-errors{
+                        border: solid 1px @bootstrap-danger;
+                        margin: 0;
+                        .field-error{
+                            background: @bootstrap-danger;
+                            color: @bootstrap-white;
+                            padding: 4px 8px;
+                            margin: 2px;
+                        }
+                    }
+                    label{
+                        font-weight: bold;
+                    }
+                    small{
+                        font-weight: bold;
+                        font-size: 11px;
+                        color: #999;
+                    }
+                }
+            }
+            .input{
+                &.submit{
+                    box-sizing: border-box;
+                    width: 100%;
+                    height: 40px;
+                    padding: 0 1em;
+                    min-width: 200px;
+                    max-width: 200px;
+                    margin: auto;
+                    margin-top: 1em;
+                    margin-bottom: 1em;
+                }
+            }
+            .captcha-block{
+                display: flex;
+                padding: 1em;
+                .captcha-image{
+                    //border: solid 4px @bootstrap-green;
+                    min-width: 200px;
+                    text-align: center;
+                    min-height: 100px;
+                    img{
+                        max-width: 400px;
+                        min-height: 100px;
+                        &:hover{
+                            //max-width: 100%;
+                            //position: absolute;
+                        }
+                    }
+                }
+                .field-link-block{
+                    margin-left: 1em;
+                    .field-block{
+                        .captcha{
+                            box-sizing: border-box;
+                            width: 100%;
+                            height: 40px;
+                            margin: 0.25em 0;
+                            padding: 0 1em;
+                        }
+                    }
+                    .link-block{}
+                }
+            }
+            .html-field{
+                padding: 0 1em;
+                position: relative;
+                .content-editable-field{
+                    border: solid 1px #000;
+                    box-sizing: border-box;
+                    width: 100%;
+                    margin: 0.25em 0;
+                    overflow: auto;
+                    height: 100%;
+                    min-height: 200px;
+                    padding: 1em;
+                }
+            }
+            .textarea-field{
+                padding: 0 1em;
+                textarea{
+                    min-height: 200px;
+                    box-sizing: border-box;
+                    width: 100%;
+                    height: 40px;
+                    margin: 0.25em 0;
+                    padding: 1em;
+                }
+            }
+            [contenteditable="true"]{
+                pre{
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

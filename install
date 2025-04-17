@@ -1,0 +1,23 @@
+<?php
+
+require_once "core.php";
+
+if(!\console\isCommandLineInterface()){
+    exit("For CLI mode only.\n");
+}
+
+$installer = new \System\Installer();
+
+$installer->setSiteName();
+
+$installer->setPublicDir();
+
+$installer->setDefaultControllerName();
+
+$installer->setDefaultThemeName();
+
+$installer->setDatabaseConfiguration();
+
+$installer->install();
+
+$installer->clean();

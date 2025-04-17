@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @var array $data
+ * @var integer $code
+ * @var string $file
+ * @var string $line
+ * @var string $class
+ * @var string $method
+ * @var string $message
+ * @var string $context
+ * @var array $backtrace
+ * @var array $arguments
+ * @var boolean $isCritical
+ * @var string $header
+ */
+
+/**
+ * @param $file
+ * @param $line
+ * @param int $index
+ * @return string
+ */
+$content = function($file, $line, $index = 10){
+    /**
+     * @param $line
+     * @param $lineNumber
+     * @param $position
+     * @return string
+     */
+    $render = function($line, $lineNumber, $position)
+    {
+        $class = "";
+        if($lineNumber == $position){
+            $class .= " danger";
+        }
+        $line = htmlspecialchars($line);
+        $result = "<li class=\"code-line\" value=\"$position\">";
+        $result .= "<span class=\"line $class\">$line</span>";
+        $result .= "</li>";
+        return $result;
+    };
+
+    $result = "";
+    $line = (int)$line;
+
+    if($line && file_exists($file)){
+        $fileLines = file($file, FILE_IGNORE_NEW_LINES);
+
+        $result .= "<ol class=\"code-block\">";
+        for($i = $line-$index; $i < $line; $i++){
+            if(!isset($fileLines[$i])){ continue; }
+            $result .= $render($fileLines[$i], $line, $i+1);
+        }
+        for($i = $line; $i < $line+$index; $i++){
+            if(!isset($fileLines[$i])){ continue; }
+            $result .= $render($fileLines[$i], $line, $i+1);
+        }
+        $result .= "</ol>";
+    }
+
+    return trim($result);
+};
+
+?><!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <?php print \web\renderStyle(\web\templateHttp('styles/errors')) ?>
+        <?php print \web\renderScript(\web\templateHttp('scripts/errors')) ?>
+    </head>
+    <body>
+        <main class="content">
+            <div class="container">
+                <div class="head"><?php print $header ?></div>
+                <div class="body">
+                    <div class="code-message">
+                        <div class="code">CODE #<?php print( isset($arguments[0]['CODE']) ? $arguments[0]['CODE'] : $code) ?></div>
+                        <pre class="message"><?php print $message ?></pre>
+                    </div>
+                    <?php if($arguments){ ?>
+                        <div class="code-message">
+                            <?php foreach($arguments as $argument){ ?>
+                                <?php if(isset($argument['SQL'])){ ?>
+                                    <div class="code">DB QUERY</div>
+                                    <pre class="message"><?php print $argument['SQL'] ?></pre>
+                                <?php } ?>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="trace-back">
+                    <div class="left-panel">
+                        <div class="item switchable active" onclick="ErrorsObject.showErrorCode(this, 'cid-0')">
+                            <div class="file-line">
+                                <?php print $file ?>
+                                (<?php print $line ?>)
+                            </div>
+                        </div>
+
+                        <?php foreach($backtrace as $index => $trace){ ?>
+                            <?php
+                                if((!isset($trace['line']) || !isset($trace['file'])) && !isset($backtrace[$index+1])){
+                                    $trace['file'] = $file;
+                                    $trace['line'] = $line;
+                                }
+                            ?>
+
+                            <div class="item switchable" onclick="ErrorsObject.showErrorCode(this, 'cid-<?php print md5(json_encode($trace)) ?>')">
+                                <div class="method">
+                                    <?php if(isset($trace['class'])){ print $trace['class']; } ?>
+                                    <?php if(isset($trace['type'])){ print $trace['type']; } ?>
+                                    <?php if(isset($trace['function'])){ print $trace['function'] . " ( )"; } ?>
+                                </div>
+                                <div class="file-line">
+                                    <?php if(isset($trace['file'])){ ?>
+                                        <?php print $trace['file']; ?>
+                                        <?php if(isset($trace['line'])){ print "({$trace['line']})"; } ?>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="right-panel">
+                        <div class="item" id="cid-0">
+                            <div class="file-line"><?php print $file; ?> (<?php print $line ?>)</div>
+                            <div class="code">
+                                <pre><code><?php print $content($file, $line, 15) ?></code></pre>
+                            </div>
+                        </div>
+
+                        <?php foreach($backtrace as $index => $trace){ ?>
+                            <?php
+                                if((!isset($trace['line']) || !isset($trace['file'])) && !isset($backtrace[$index+1])){
+                                    $trace['file'] = $file;
+                                    $trace['line'] = $line;
+                                }
+                            ?>
+
+                            <?php if(isset($trace['line'])){ ?>
+                                <div class="item hidden" id="cid-<?php print md5(json_encode($trace)) ?>">
+                                    <div class="file-line">
+                                        <?php print $trace['file']; ?>
+                                        <?php if(isset($trace['line'])){ print "({$trace['line']})"; } ?>
+                                    </div>
+                                    <div class="code">
+                                        <pre><code><?php print $content($trace['file'], $trace['line'], 15) ?></code></pre>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

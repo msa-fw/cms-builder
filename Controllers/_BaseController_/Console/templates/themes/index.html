@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @var HTML $render
+ * @var array $data
+ * @var Result $widget
+*/
+
+use System\Core\Widget;
+use System\Core\Response;
+use System\Core\Widget\Result;
+use System\Core\Template\Render\HTML;
+
+use function web\templateHttp;
+
+HTML::addCss(templateHttp('styles/main'));
+HTML::addJs(templateHttp('scripts/main'));
+HTML::addJs(templateHttp('scripts/events'));
+
+$controller = Response::response('controller');
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <?php $render->renderTitle() ?>
+        <?php $render->renderIcon() ?>
+        <?php $render->renderMetaTags() ?>
+
+        <?php $render->renderCssFiles(HTML::SCRIPT_STYLE_POSITION_HEAD) ?>
+        <?php $render->renderJsFiles(HTML::SCRIPT_STYLE_POSITION_HEAD) ?>
+
+        <script type="application/javascript">
+            mainObj.root = '<?php print templateHttp('/') ?>/';
+        </script>
+    </head>
+
+    <body class="body body-container block">
+
+        <?php if(Widget::header()->render()->set($widget)->exist()){ ?>
+            <div class="header widget widget-header">
+                <?php $widget->print() ?>
+            </div>
+        <?php } ?>
+
+        <div class="content content-block">
+
+            <?php if(Widget::top()->render()->set($widget)->exist()){ ?>
+                <div class="widget widget-top">
+                    <?php $widget->print() ?>
+                </div>
+            <?php } ?>
+
+            <div class="controller controller-block<?php print($controller->key('name')->set($name)->read('') ? " {$name} {$name}-controller" : '') ?>">
+
+                <?php if(Widget::leftbar()->render()->set($widget)->exist()){ ?>
+                    <div class="widget widget-leftbar">
+                        <?php $widget->print() ?>
+                    </div>
+                <?php } ?>
+
+                <div class="action action-block<?php print($controller->key('action')->set($name)->read('') ? " {$name} {$name}-action" : '') ?>">
+
+                    <?php if(Widget::bodyTop()->render()->set($widget)->exist()){ ?>
+                        <div class="widget widget-bodyTop">
+                            <?php $widget->print() ?>
+                        </div>
+                    <?php } ?>
+
+                    <?php print $render->renderController()
+                        ->getControllerContentResult() ?>
+
+                    <?php $render->renderCssFiles(HTML::SCRIPT_STYLE_POSITION_BODY) ?>
+                    <?php $render->renderJsFiles(HTML::SCRIPT_STYLE_POSITION_BODY) ?>
+
+                    <?php if(Widget::bodyDown()->render()->set($widget)->exist()){ ?>
+                        <div class="widget widget-bodyDown">
+                            <?php $widget->print() ?>
+                        </div>
+                    <?php } ?>
+                </div>
+
+                <?php if(Widget::rightbar()->render()->set($widget)->exist()){ ?>
+                    <div class="widget widget-rightbar">
+                        <?php $widget->print() ?>
+                    </div>
+                <?php } ?>
+            </div>
+
+            <?php if(Widget::bottom()->render()->set($widget)->exist()){ ?>
+                <div class="widget widget-bottom">
+                    <?php $widget->print() ?>
+                </div>
+            <?php } ?>
+        </div>
+
+        <div class="footer">
+
+            <?php if(Widget::footer()->render()->set($widget)->exist()){ ?>
+                <div class="widget widget-footer">
+                    <?php $widget->print() ?>
+                </div>
+            <?php } ?>
+
+            <?php $render->renderCssFiles(HTML::SCRIPT_STYLE_POSITION_FOOTER) ?>
+            <?php $render->renderJsFiles(HTML::SCRIPT_STYLE_POSITION_FOOTER) ?>
+        </div>
+    </body>
+
+    <?php $render->renderCssFiles(false) ?>
+    <?php $render->renderJsFiles(false) ?>
+</html>

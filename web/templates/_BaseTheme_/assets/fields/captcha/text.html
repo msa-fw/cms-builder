@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @var HTML $render
+ * @var array $data
+ * @var array $field
+ * @var array $fields
+ * @var string $value
+ * @var string $formName
+ * @var string $fieldName
+ */
+
+use System\Core\Language;
+use System\Core\Template\Render\HTML;
+
+use function response\url;
+use function templates\attributes2string;
+
+if(isset($field['attributes']['class'])){
+    $field['attributes']['class'] = "{$field['attributes']['class']} input";
+}else{
+    $field['attributes']['class'] = "captcha input";
+}
+
+$updateCaptchaLink = url('updateCaptchaAction')
+    ->query(array('field' => $field['name']))
+    ->build()->get();
+
+$captchaId = md5(mt_rand() . uniqid());
+
+?>
+
+<div class="captcha-block input-field-<?php print $field['attributes']['class'] ?> <?php print $field['type'] ?>-field">
+    <div class="captcha-image">
+        <a href="javascript:void(0)" onclick="formObj.updateCaptcha('<?php print $updateCaptchaLink ?>', '#captcha-<?php print $captchaId ?>')">
+            <img id="captcha-<?php print $captchaId ?>" class="image-captcha" src="<?php print $field['default'] ?>">
+        </a>
+    </div>
+    <div class="field-link-block">
+        <div class="field-block">
+            <input type="<?php print $field['type'] ?>" name="<?php print $fieldName ?>" <?php print attributes2string($field['attributes'], true, 'value') ?> />
+        </div>
+        <div class="link-block">
+            <a href="javascript:void(0)" onclick="formObj.updateCaptcha('<?php print $updateCaptchaLink ?>', '#captcha-<?php print $captchaId ?>')"><?php print Language::System('form.field.captcha.link.updateValue')->returnKey() ?></a>
+        </div>
+    </div>
+</div>

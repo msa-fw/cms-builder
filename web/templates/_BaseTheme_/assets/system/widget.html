@@ -1,0 +1,26 @@
+<?php
+
+use System\Core\Template\Render\HTML;
+use function web\templateHttp;
+
+/**
+ * @var array $data
+ * @var string $keyId
+ * @var string $content
+ */
+
+HTML::addCss(templateHttp('styles/widget'), HTML::SCRIPT_STYLE_POSITION_FOOTER);
+
+?>
+
+<div class="widget-block widget-position-<?php print $keyId ?>">
+
+    <?php if($data['options']['showTitle'] && $data['title']){ ?>
+        <div class="widget-title"><?php print $data['title'] ?></div>
+    <?php } ?>
+
+    <div class="widget-content">
+        <?php print $content ?>
+    </div>
+
+</div>

@@ -1,0 +1,55 @@
+<?php
+
+use System\Singleton;
+use System\Core\Events;
+
+$args = array_map('trim', $_SERVER['argv']);
+
+define("CLI_ROOT_PATH", $args[0]);
+
+$requestCommand = implode(' ', array_slice($args, 1));
+
+require_once __DIR__ . "/core.php";
+
+$consoleDebug = \System\Core\Console\Debug::start($requestCommand);
+
+// for calling error handler
+$debug = Singleton::Debug();
+
+
+$events = Singleton::Events();
+$events->loadControllersParams("configs/events.php");
+Events::afterEventsInitialize()->run($events);
+
+
+Events::beforeSystemStart()->run();
+
+
+$config = Singleton::Config();
+Events::beforeConfigInitialize()->run($config);
+
+$config->initialize();
+$config->loadControllersParams("configs/config.php");
+Events::afterConfigInitialize()->run($config);
+
+
+$language = Singleton::Language();
+Events::beforeLanguageInitialize()->run($language);
+
+$languageCode = $config->general('language')->read();
+$language->loadControllersParams("languages/$languageCode.php");
+
+Events::afterLanguageInitialize()->run($language);
+
+
+$router = Singleton::Console();
+$router->loadControllersParams("configs/console.php");
+Events::beforeCommandLineRunning()->run($router, $requestCommand);
+
+$result = $router->runController($requestCommand);
+Events::afterCommandLineRunning()->run($router, $result);
+
+
+Events::afterSystemStart()->run();
+
+$consoleDebug->end();

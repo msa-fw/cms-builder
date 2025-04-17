@@ -1,0 +1,29 @@
+AddDefaultCharset utf-8
+Options -Indexes
+RewriteEngine on
+
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*) http://%1/$1 [L,R]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$  /$1 [R,L]
+
+RewriteCond %{REQUEST_FILENAME} !/[_WEB_]/
+RewriteRule ^(.*)$ [_WEB_]/$1 [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+DirectoryIndex singleton.php
+RewriteRule ^(.*)$ ./singleton.php [L]
+#RewriteRule ^(.*)$ ./index.php [L]
+
+# close access to template files
+# if system not use JS-frameworks
+<Files "*.html">
+    Require all denied
+
+# Alternative method:
+#    Order Allow,Deny
+#    Deny from all
+</Files>
