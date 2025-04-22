@@ -25,7 +25,8 @@ class IndexAction extends Controller
 
     public function get()
     {
-        return $this;
+        $this->form->createForm();
+        return $this->setForm();
     }
 
     public function post()

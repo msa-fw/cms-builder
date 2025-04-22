@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @var HTML $render
+ * @var array $data
+ * @var array $field
+ * @var array $fields
+ * @var string $value
+ * @var string $fieldId
+ * @var string $formName
+ * @var string $fieldName
+ */
+
+use System\Core\Template\Render\HTML;
+use System\Core\Template\Wysiwyg\Wysiwyg;
+use function web\templateHttp;
+
+HTML::addJs(templateHttp('wysiwygs/wysiwyg/wysiwyg'));
+HTML::addCss(templateHttp('wysiwygs/wysiwyg/wysiwyg'));
+
+$package = 'minimal';
+
+?>
+
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', function(){
+        wysiwyg.addKit('<?php print $package ?>', '<?php print json_encode(Wysiwyg::$package()) ?>');
+        wysiwyg.addLang('<?php print json_encode(Wysiwyg::getLangPack()) ?>');
+
+        wysiwyg.init('#<?php print $fieldId ?>', '<?php print $package ?>');
+        wysiwyg.run('#<?php print $fieldId ?>_<?php print $package ?> div.content');
+    });
+</script>

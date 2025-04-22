@@ -35,6 +35,7 @@ Config::template('siteLogo')->write('images/logo/micro.png');
 Config::template('titleDelimiter')->write(' / ');
 Config::template('publicDirectory')->write('[_WEB_]');
 Config::template('uploadDirectory')->write('files');
+Config::template('wysiwygTemplate')->write('wysiwygs/wysiwyg/default.html');
 Config::template('compressHtml')->write(false);
 Config::template('allowedRenders')->write(array(
     System\Core\Template\Render\XML::class,

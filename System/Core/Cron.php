@@ -60,7 +60,7 @@ class Cron
 
     public function __construct()
     {
-        $this->cronDirectory = root(getTmpPath() . "/cron");
+        $this->cronDirectory = root(getTmpPath("cron"));
         makeDirectory($this->cronDirectory);
     }
 

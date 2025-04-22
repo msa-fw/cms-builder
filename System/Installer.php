@@ -173,13 +173,12 @@ class Installer
         rename(root('web'), root($this->answers['publicDir']));
 
         scanDirectoryCallback(ROOT, function($file){
+            if(is_file($file)){
+                $content = read($file);
+                $content = str_replace(array('_BaseController_', 'web/'), array($this->answers['defaultController'], "{$this->answers['publicDir']}/"), $content);
+                write($file, $content);
+            }
             if(strpos($file, 'Controllers/_BaseController_') || strpos($file, 'templates/_BaseTheme_')){
-                if(is_file($file)){
-                    $content = read($file);
-                    $content = str_replace('_BaseController_', $this->answers['defaultController'], $content);
-                    write($file, $content);
-                }
-
                 $newFileName = str_replace(
                     array('_BaseController_', '_BaseTheme_'),
                     array($this->answers['defaultController'], $this->answers['defaultTemplate']),

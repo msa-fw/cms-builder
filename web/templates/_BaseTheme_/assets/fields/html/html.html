@@ -11,13 +11,18 @@
  */
 
 use System\Core\Template\Render\HTML;
+use function web\templateRoot;
 use function templates\attributes2string;
 
 $fieldId = "content-field-" . md5(mt_rand() . uniqid());
 
+$wysiwyg = templateRoot($field['wysiwygTemplate']);
+if(file_exists($wysiwyg)){
+    include $wysiwyg;
+}
+
 ?>
 
 <div class="field html-field html-field-<?php print $field['attributes']['class'] ?> <?php print $field['type'] ?>-field">
-    <textarea id="<?php print $fieldId ?>" name="<?php print $fieldName ?>" style="display: none" <?php print attributes2string($field['attributes']) ?>></textarea>
-    <div for="#<?php print $fieldId ?>" contenteditable="true" class="content-editable-field"><?php print $value ?></div>
+    <textarea id="<?php print $fieldId ?>" name="<?php print $fieldName ?>" <?php print attributes2string($field['attributes']) ?>></textarea>
 </div>

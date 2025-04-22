@@ -12,3 +12,5 @@ Events::afterSessionStart()->append()->handler(Events\SessionEvent::class, 'setD
 
 Events::beforeTemplateRender()->append()->handler(Events\WidgetsEvent::class, 'initializeWidgets');
 Events::beforeTemplateRender()->append()->handler(Events\WidgetsEvent::class, 'executeWidgetsForAnotherRenderTypes');
+
+Events::afterConfigInitialize()->append()->handler(Events\LoggingErrorsEvent::class);

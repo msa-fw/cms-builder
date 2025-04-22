@@ -71,7 +71,7 @@ body main.content .container .trace-back .right-panel {
   border: solid 1px #343a40;
 }
 body main.content .container .trace-back .right-panel .item.hidden {
-  display: none;
+  display: none !important;
 }
 body main.content .container .trace-back .right-panel .item .file-line {
   padding: 4px 12px;

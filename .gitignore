@@ -3,7 +3,7 @@
 .htaccess
 composer.lock
 vendor
-config.php
+/config.php
 web/files
 Controllers/Home*
 web/templates/default*

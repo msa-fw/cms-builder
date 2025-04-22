@@ -6,8 +6,12 @@ body h1,
 body h2,
 body h3,
 body h4,
-body h5 {
+body h5,
+body h6 {
   margin: 0;
+}
+body .hidden {
+  display: none !important;
 }
 body.body-container .content.content-block .controller {
   display: flex;
@@ -40,4 +44,15 @@ body.body-container .content.content-block .controller.controller-block .action 
   min-height: 640px;
   border: solid 1px #ccc;
   padding: 4px 6px;
+}
+body .absolute {
+  position: absolute;
+  z-index: 1001;
+}
+body .title-content {
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 4px;
 }

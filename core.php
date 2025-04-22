@@ -22,9 +22,9 @@ define('PUBLIC_DIR', '/' . trim(dirname($_SERVER['PHP_SELF']), './'));
 error_reporting(0);
 ini_set('display_errors', false);
 ini_set('display_startup_errors', false);
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
 
 ini_set('memory_limit', '128M');
 

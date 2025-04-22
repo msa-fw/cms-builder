@@ -2,13 +2,14 @@
 
 namespace System\Core\Form;
 
-use function response\url;
 use System\Core\Form;
+use System\Core\Language;
+use System\Core\Form\Fields\Html;
 use System\Core\Form\Fields\Input;
 use System\Core\Form\Fields\Select;
 use System\Core\Form\Fields\Button;
 use System\Core\Form\Fields\Common;
-use System\Core\Language;
+use function response\url;
 
 /**
  * Class Fields
@@ -112,10 +113,7 @@ class Fields
         $this->fields[$fieldName]['fieldSet'] = $fieldSet;
         $this->fields[$fieldName]['type'] = 'html';
 
-        $attributes = new Common($fieldName, $this->fields[$fieldName]);
-        $attributes->attribute('class', 'content-editable-field-hidden');
-
-        return $attributes;
+        return new Html($fieldName, $this->fields[$fieldName]);
     }
 
     public function field($fieldName, $fieldType, $fieldSet = null)
