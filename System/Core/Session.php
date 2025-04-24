@@ -2,11 +2,10 @@
 
 namespace System\Core;
 
+use System\Helpers\Classes\Fs;
 use System\Helpers\Classes\ArrayManager;
 
 use function strings\generate;
-use function filesystem\root;
-use function filesystem\getTmpPath;
 use function filesystem\makeDirectory;
 
 /**
@@ -71,7 +70,7 @@ class Session
 
     public function initialize()
     {
-        $sessionDirectory = root(getTmpPath("_session"));
+        $sessionDirectory = Fs::server()->temp("_session");
         makeDirectory($sessionDirectory);
 
         ini_set('session.gc_maxlifetime', Config::session('sessionLifeTime')->read());

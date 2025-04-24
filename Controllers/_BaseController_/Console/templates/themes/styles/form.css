@@ -112,11 +112,14 @@
   border: solid 1px #000;
   box-sizing: border-box;
   width: 100%;
-  margin: 0.25em 0;
   overflow: auto;
   height: 100%;
   min-height: 200px;
+  max-height: 300px;
   padding: 1em;
+  word-break: break-all;
+  display: inline-block;
+  white-space: pre-wrap;
 }
 .form .form-body .form-fields .textarea-field {
   padding: 0 1em;

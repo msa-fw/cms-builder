@@ -2,10 +2,9 @@
 
 namespace System\Core;
 
-use function console\isCommandLineInterface;
+use System\Helpers\Classes\Fs;
 use System\Traits\Autoloader;
 use System\Helpers\Classes\ArrayManager;
-use function filesystem\root;
 
 /**
  * Class Config
@@ -59,7 +58,7 @@ class Config
 
     public function initialize()
     {
-        $this->includeAutoloadFile(root("config.php"));
+        $this->includeAutoloadFile(Fs::server()->root("config.php"));
         return $this;
     }
 }

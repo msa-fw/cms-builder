@@ -11,7 +11,6 @@ use System\Core\Form\Interfaces\ValidatorInterface;
 
 use function encrypt\csrf;
 use function strings\generate;
-use function web\templateRoot;
 
 /**
  * Class Form

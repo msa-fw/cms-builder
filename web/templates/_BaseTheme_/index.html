@@ -8,14 +8,13 @@
 
 use System\Core\Widget;
 use System\Core\Response;
+use System\Helpers\Classes\Fs;
 use System\Core\Widget\Result;
 use System\Core\Template\Render\HTML;
 
-use function web\templateHttp;
-
-HTML::addCss(templateHttp('styles/main'));
-HTML::addJs(templateHttp('scripts/main'));
-HTML::addJs(templateHttp('scripts/events'));
+HTML::addCss(Fs::site()->theme('styles/main'));
+HTML::addJs(Fs::site()->theme('scripts/main'));
+HTML::addJs(Fs::site()->theme('scripts/events'));
 
 $controller = Response::response('controller');
 
@@ -30,7 +29,7 @@ $controller = Response::response('controller');
         <?php $render->renderJsFiles(HTML::SCRIPT_STYLE_POSITION_HEAD) ?>
 
         <script type="application/javascript">
-            mainObj.root = '<?php print templateHttp('/') ?>/';
+            mainObj.root = '<?php print Fs::site()->theme('/') ?>/';
         </script>
     </head>
 

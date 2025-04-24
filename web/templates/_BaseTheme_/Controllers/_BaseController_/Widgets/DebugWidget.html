@@ -13,17 +13,17 @@
 
 use System\Core\Debug;
 use System\Core\Template;
+use System\Helpers\Classes\Fs;
 use Controllers\_BaseController_\Language;
 use System\Core\Template\Render\HTML;
 
 use function templates\n2br;
 use function templates\modal;
-use function web\templateHttp;
 
-HTML::addJs(templateHttp('Controllers/_BaseController_/scripts/widget'));
-HTML::addCss(templateHttp('Controllers/_BaseController_/styles/widget'));
+HTML::addJs(Fs::site()->theme('Controllers/_BaseController_/scripts/widget'));
+HTML::addCss(Fs::site()->theme('Controllers/_BaseController_/styles/widget'));
 
-$pubDir = \web\http('/');
+$pubDir = Fs::site()->public('/') . '/';
 
 ?>
 

@@ -3,10 +3,9 @@
 namespace System\Core\Cache\Drivers;
 
 use System\Core\Cache\Common;
+use System\Helpers\Classes\Fs;
 use System\Core\Cache\Interfaces\DriverInterface;
 
-use function filesystem\root;
-use function filesystem\getTmpPath;
 use function filesystem\makeDirectory;
 use function filesystem\scanDirectoryCallback;
 
@@ -44,7 +43,7 @@ class PHP extends Common implements DriverInterface
 
     public function defineCacheRoot()
     {
-        self::$cacheRoot = root(getTmpPath($this->config['directory'] . '/php'));
+        self::$cacheRoot = Fs::server()->temp($this->config['directory'] . '/php');
         makeDirectory(self::$cacheRoot);
         return $this;
     }

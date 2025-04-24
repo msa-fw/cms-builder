@@ -13,7 +13,7 @@
 use System\Core\Template\Render\HTML;
 use function templates\attributes2string;
 
-if(isset($field['attributes']['__csrfTokenKey'])&& !empty($field['attributes']['__csrfTokenKey'])){
+if($field['attributes']['__csrfTokenKey']){
     $value = $field['default'];
 }
 

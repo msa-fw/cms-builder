@@ -1,7 +1,7 @@
 <?php
 
+use System\Helpers\Classes\Fs;
 use System\Core\Template\Render\HTML;
-use function web\templateHttp;
 
 /**
  * @var array $data
@@ -9,7 +9,7 @@ use function web\templateHttp;
  * @var string $content
  */
 
-HTML::addCss(templateHttp('styles/widget'), HTML::SCRIPT_STYLE_POSITION_FOOTER);
+HTML::addCss(Fs::site()->theme('styles/widget'), HTML::SCRIPT_STYLE_POSITION_FOOTER);
 
 ?>
 

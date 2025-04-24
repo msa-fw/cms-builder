@@ -34,7 +34,7 @@ class HelpCommand
         $this->setStringsMaxLengths($commands);
 
         foreach($commands as $index => $params){
-            if(!$params['faq']){
+            if(!$params['faq'] || !$params['enabled']){
                 unset($commands[$index]);
                 continue;
             }
@@ -93,7 +93,7 @@ class HelpCommand
             $maxLengthPoint1 = strlen($value[1]);
             $message = paint("php")
                 ->colorBrightWhite()->result('')->get(' ');
-            $message .= paint( pathinfo(CLI_ROOT_PATH, PATHINFO_FILENAME) . " ")
+            $message .= paint(pathinfo(CLI_ROOT_PATH, PATHINFO_FILENAME) . " ")
                 ->colorBrightGreen()->result('')->get("");
             $message .= paint(trim($value[1]))
                 ->colorBrightYellow()->result('')->get("");
@@ -105,7 +105,7 @@ class HelpCommand
         if(!$message || $message == $command){
             $message = paint("php")->colorBrightWhite()
                 ->result('')->get(' ');
-            $message .= paint( pathinfo(CLI_ROOT_PATH, PATHINFO_FILENAME) . " ")
+            $message .= paint(pathinfo(CLI_ROOT_PATH, PATHINFO_FILENAME) . " ")
                 ->colorBrightGreen()->result('')->get("");
             $message .= paint(trim($command))
                 ->colorBrightYellow()->result('')->get("");

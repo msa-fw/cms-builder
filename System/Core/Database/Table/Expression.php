@@ -67,7 +67,7 @@ class Expression implements ExpressionInterface, ExpressionParentInterface, Expr
         }
         if(is_callable($value)){
             /** @var ExpressionNestedInterface $select */
-            $select = new self( $this->driver);
+            $select = new self($this->driver);
             call_user_func($value, $select);
             $value = $select;
         }
@@ -96,7 +96,7 @@ class Expression implements ExpressionInterface, ExpressionParentInterface, Expr
         }
         if(is_callable($value)){
             /** @var ExpressionNestedInterface $select */
-            $select = new self( $this->driver);
+            $select = new self($this->driver);
             call_user_func($value, $select);
             $value = $select;
         }
@@ -164,9 +164,10 @@ class Expression implements ExpressionInterface, ExpressionParentInterface, Expr
 
     /**
      * @param array $bindings
+     * @param array $bindingTypes
      * @return ResultInterface
      */
-    public function exec(array $bindings = array())
+    public function exec(array $bindings = array(), array $bindingTypes = array())
     {
         return $this->driver->query('')->exec();
     }

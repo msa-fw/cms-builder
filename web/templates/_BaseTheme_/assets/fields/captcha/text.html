@@ -16,7 +16,7 @@ use System\Core\Template\Render\HTML;
 use function response\url;
 use function templates\attributes2string;
 
-if(isset($field['attributes']['class'])){
+if($field['attributes']['class']){
     $field['attributes']['class'] = "{$field['attributes']['class']} input";
 }else{
     $field['attributes']['class'] = "captcha input";
@@ -33,7 +33,7 @@ $captchaId = md5(mt_rand() . uniqid());
 <div class="captcha-block input-field-<?php print $field['attributes']['class'] ?> <?php print $field['type'] ?>-field">
     <div class="captcha-image">
         <a href="javascript:void(0)" onclick="formObj.updateCaptcha('<?php print $updateCaptchaLink ?>', '#captcha-<?php print $captchaId ?>')">
-            <img id="captcha-<?php print $captchaId ?>" class="image-captcha" src="<?php print $field['default'] ?>">
+            <img id="captcha-<?php print $captchaId ?>" class="image-captcha" src="<?php print $updateCaptchaLink ?>">
         </a>
     </div>
     <div class="field-link-block">

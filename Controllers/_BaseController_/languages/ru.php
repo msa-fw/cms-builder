@@ -248,7 +248,8 @@ Language::System('wysiwyg.button.title.header5')->write('<h5>заголовок<
 Language::System('wysiwyg.button.title.header6')->write('<h6>заголовок</h6>');
 Language::System('wysiwyg.button.title.quote')->write('цитата');
 Language::System('wysiwyg.button.title.code')->write('блок кода');
-Language::System('wysiwyg.button.title.link')->write('гиперссылка');
+Language::System('wysiwyg.button.title.link')->write('ссылка');
+Language::System('wysiwyg.button.title.hyperlink')->write('гиперссылка');
 Language::System('wysiwyg.button.title.hr')->write('линия');
 Language::System('wysiwyg.button.title.table')->write('таблица');
 Language::System('wysiwyg.button.title.align')->write('выровнять');

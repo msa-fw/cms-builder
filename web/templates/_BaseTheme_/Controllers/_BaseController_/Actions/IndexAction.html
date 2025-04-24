@@ -7,14 +7,13 @@
 */
 
 use System\Core\Response;
-use Controllers\_BaseController_\Widget;
 use System\Core\Widget\Result;
+use System\Helpers\Classes\Fs;
+use Controllers\_BaseController_\Widget;
 use System\Core\Template\Render\HTML;
 
-use function web\templateHttp;
-
-HTML::addJs(templateHttp('Controllers/_BaseController_/scripts/_BaseController_'));
-HTML::addCss(templateHttp('Controllers/_BaseController_/styles/_BaseController_'));
+HTML::addJs(Fs::site()->theme('Controllers/_BaseController_/scripts/_BaseController_'));
+HTML::addCss(Fs::site()->theme('Controllers/_BaseController_/styles/_BaseController_'));
 
 
 $render->simpleVariable = 'simple value';

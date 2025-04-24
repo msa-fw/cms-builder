@@ -2,13 +2,13 @@
 
 namespace Controllers\_BaseController_\Console;
 
+use System\Helpers\Classes\Fs;
 use Controllers\_BaseController_\Language;
 use System\Core\Console\ConsoleInterface;
 
 use function console\danger;
 use function console\success;
 use function console\warning;
-use function filesystem\root;
 use function filesystem\read;
 use function filesystem\write;
 
@@ -21,7 +21,7 @@ class LanguageCommand
     public function __construct(ConsoleInterface $console)
     {
         $this->console = $console;
-        $this->controllerDirectory = root("Controllers");
+        $this->controllerDirectory = Fs::server()->root("Controllers");
     }
 
     public function execute($languageCode)

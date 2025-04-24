@@ -38,11 +38,12 @@ class CronCommand
         $prepared = array();
         foreach($this->tasks as $index => $task){
             $key = "cron:run '{$task['key']}'";
-            $prepared[$index]['command'] = $key;
             $prepared[$index]['faq'] = $task['faq'];
+            $prepared[$index]['command'] = $key;
+            $prepared[$index]['enabled'] = $task['enabled'];
         }
 
-        $help = new HelpCommand();
+        $help = new HelpCommand($this->console);
         return $help->run($prepared);
     }
 

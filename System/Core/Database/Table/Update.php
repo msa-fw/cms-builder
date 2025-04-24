@@ -19,10 +19,10 @@ class Update extends Expression implements UpdateGetterInterface
         return $this->driver->update($this);
     }
 
-    public function exec(array $bindings = array())
+    public function exec(array $bindings = array(), array $bindingTypes = array())
     {
         $query = $this->get();
-        $query->bindings($bindings);
+        $query->bindings($bindings, $bindingTypes);
         return $query->exec();
     }
 

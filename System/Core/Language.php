@@ -3,7 +3,6 @@
 namespace System\Core;
 
 use System\Helpers\Classes\ArrayManager;
-use function filesystem\controller;
 use System\Traits\Autoloader;
 
 /**

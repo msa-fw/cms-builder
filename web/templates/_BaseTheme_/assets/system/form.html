@@ -5,13 +5,13 @@
  * @var array $data
  */
 
+use System\Helpers\Classes\Fs;
 use System\Core\Template\Render\HTML;
 
-use function web\templateHttp;
 use function templates\attributes2string;
 
-HTML::addCss(templateHttp('styles/form'));
-HTML::addJs(templateHttp('scripts/form'));
+HTML::addCss(Fs::site()->theme('styles/form'));
+HTML::addJs(Fs::site()->theme('scripts/form'));
 
 ?>
 

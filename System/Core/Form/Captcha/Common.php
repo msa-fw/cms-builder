@@ -6,7 +6,7 @@ use System\Core\Form\Interfaces\CaptchaInterface;
 
 use function math\percent;
 use function strings\generate;
-use function web\templateRoot;
+use System\Helpers\Classes\Fs;
 
 class Common implements CaptchaInterface
 {
@@ -26,7 +26,7 @@ class Common implements CaptchaInterface
 
     public function __construct($word, $fontSize = 20)
     {
-        $this->fonts = glob(templateRoot('fonts/captcha/*.ttf'));
+        $this->fonts = glob(Fs::server()->theme('fonts/captcha/*.ttf'));
 
         $this->word = $word;
         $this->fontSize = $fontSize;

@@ -2,10 +2,10 @@
 
 namespace Controllers\_BaseController_\Events\LoggerDrivers;
 
+use System\Helpers\Classes\Fs as Filesystem;
+
 use function filesystem\read;
-use function filesystem\root;
 use function filesystem\write;
-use function filesystem\getTmpPath;
 use function filesystem\makeDirectory;
 
 class FS implements DriverInterface
@@ -27,7 +27,7 @@ class FS implements DriverInterface
 
     public function __construct()
     {
-        $this->logDirRoot = root(getTmpPath("errors/" . date('Y-m-d')));
+        $this->logDirRoot = Filesystem::server()->temp("errors/" . date('Y-m-d'));
         makeDirectory($this->logDirRoot);
     }
 

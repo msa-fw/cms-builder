@@ -3,15 +3,14 @@
 namespace System\Core\Template\Render;
 
 use System\Core\Config;
-use System\Core\Request;
 use System\Core\Response;
+use System\Helpers\Classes\Fs;
 use System\Helpers\Classes\ArrayManager;
 use System\Core\Template\Interfaces\RenderInterface;
 
 use function web\render;
 use function web\renderStyle;
 use function web\renderScript;
-use function web\templateRoot;
 
 class HTML implements RenderInterface
 {
@@ -29,6 +28,8 @@ class HTML implements RenderInterface
 
     protected $controllerContent = '';
 
+    protected $server;
+
     public function __get($name)
     {
         return isset($this->undefined[$name]) ? $this->undefined[$name] : null;
@@ -42,12 +43,13 @@ class HTML implements RenderInterface
 
     public function __construct()
     {
+        $this->server = Fs::server();
         Response::header('Content-Type', 'text/html; charset=utf-8');
     }
 
     public function renderContent()
     {
-        $templateMainFile = templateRoot("index.html");
+        $templateMainFile = $this->server->theme("index.html");
         $this->dataContent = render($templateMainFile, array('render' => $this));
         return $this;
     }
@@ -93,9 +95,9 @@ class HTML implements RenderInterface
 
     public function renderErrorPage($responseCode)
     {
-        $errorFilePath = templateRoot("assets/errors/{$responseCode}.html");
+        $errorFilePath = $this->server->theme("assets/errors/{$responseCode}.html");
         if(!file_exists($errorFilePath)){
-            $errorFilePath = templateRoot("assets/errors/unknownError.html");
+            $errorFilePath = $this->server->theme("assets/errors/unknownError.html");
         }
         $this->controllerContent = render($errorFilePath, array(
             'render' => $this,
@@ -107,7 +109,7 @@ class HTML implements RenderInterface
     public function renderForm(ArrayManager $form)
     {
         if($formData = $form->array()->raw()){
-            $template = templateRoot($formData['template']);
+            $template = $this->server->theme($formData['template']);
 
             $sortedList = array();
             foreach($formData['fields'] as $key => $value){
@@ -125,7 +127,7 @@ class HTML implements RenderInterface
 
     public function renderFields($formName, $fieldsList = array())
     {
-        $template = templateRoot("assets/fields/fieldSet.html");
+        $template = $this->server->theme("assets/fields/fieldSet.html");
 
         return render($template, array(
             'formName' => $formName,
@@ -138,7 +140,7 @@ class HTML implements RenderInterface
     {
         $controllerName = $controller->key('controller')->read('');
         $actionName = $controller->key('action')->read('');
-        return templateRoot("Controllers/{$controllerName}/Actions/{$actionName}.html");
+        return $this->server->theme("Controllers/{$controllerName}/Actions/{$actionName}.html");
     }
 
     public function renderIcon()

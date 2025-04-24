@@ -45,3 +45,14 @@ body.body-container .content.content-block .controller.controller-block .action 
   border: solid 1px #ccc;
   padding: 4px 6px;
 }
+body .absolute {
+  position: absolute;
+  z-index: 1001;
+}
+body .title-content {
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 4px;
+}

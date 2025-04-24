@@ -10,13 +10,13 @@
  * @var string $fieldName
  */
 
+use System\Helpers\Classes\Fs;
 use System\Core\Template\Render\HTML;
-use function web\templateRoot;
 use function templates\attributes2string;
 
 $fieldId = "content-field-" . md5(mt_rand() . uniqid());
 
-$wysiwyg = templateRoot($field['wysiwygTemplate']);
+$wysiwyg = Fs::server()->theme($field['wysiwygTemplate']);
 if(file_exists($wysiwyg)){
     include $wysiwyg;
 }

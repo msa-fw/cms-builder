@@ -21,3 +21,5 @@ $installer->setDatabaseConfiguration();
 $installer->install();
 
 $installer->clean();
+
+$installer->run(__DIR__);

@@ -2,8 +2,8 @@
 
 namespace System\Helpers\Classes\Render;
 
+use System\Helpers\Classes\Fs;
 use function web\render;
-use function web\templateRoot;
 
 class Modal
 {
@@ -97,7 +97,7 @@ class Modal
 
     public function render()
     {
-        $file = templateRoot($this->modal['template']);
+        $file = Fs::server()->theme($this->modal['template']);
         return render($file, $this->modal);
     }
 }

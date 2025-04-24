@@ -12,9 +12,9 @@ use Controllers\_BaseController_\Console\LanguageCommand;
 use Controllers\_BaseController_\Console\DatabaseCommand;
 use Controllers\_BaseController_\Console\MigrationCommand;
 
-Console::_BaseController_('_BaseController_:test')->action(TestsCommand::class, 'test')->faq('_BaseController_.console.tests.test1');
-Console::_BaseController_('_BaseController_:test2')->action(TestsCommand::class, 'test2')->faq('_BaseController_.console.tests.test2');
-Console::_BaseController_('_BaseController_:test3')->action(TestsCommand::class, 'test3')->faq('_BaseController_.console.tests.test3');
+Console::_BaseController_('dialog:test')->action(TestsCommand::class, 'test')->faq('_BaseController_.console.tests.test1');
+Console::_BaseController_('dialog:test2')->action(TestsCommand::class, 'test2')->faq('_BaseController_.console.tests.test2');
+Console::_BaseController_('dialog:test3')->action(TestsCommand::class, 'test3')->faq('_BaseController_.console.tests.test3');
 
 Console::_BaseController_('help')->action(HelpCommand::class)->faq('_BaseController_.console.help.cmd.descriptionCommon');
 Console::_BaseController_('help [command prefix]')->action(HelpCommand::class)->faq('_BaseController_.console.help.cmd.descriptionCategory');

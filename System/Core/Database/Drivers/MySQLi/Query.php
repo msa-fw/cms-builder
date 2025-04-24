@@ -14,6 +14,8 @@ class Query implements QueryInterface
 
     protected $bindings = array();
 
+    protected $bindingTypes = array();
+
     protected $mysqliInterface;
 
     protected $mysqli;
@@ -25,10 +27,13 @@ class Query implements QueryInterface
         $this->mysqliInterface = $mysqli;
     }
 
-    public function bindings(array $bindings)
+    public function bindings(array $bindings, array $bindingTypes = array())
     {
         foreach($bindings as $key => $value){
             $this->bindings[$key] = $value;
+        }
+        foreach($bindingTypes as $key => $value){
+            $this->bindingTypes[$key] = $value;
         }
         return $this;
     }
@@ -99,21 +104,55 @@ class Query implements QueryInterface
                 $value = $value->getValue();
                 $this->query = str_replace($key, $value, $this->query);
                 unset($this->bindings[$key]);
-            }else
-                if(isset($this->bindings[$value])){
-                    $this->query = str_replace($key, $value, $this->query);
-                    unset($this->bindings[$key]);
-                }
+            }else                                                               // ??? customize bindings (re-define types)
+                if(isset($this->bindings[$value])){                             // $this->model->getTableInstance()->select('*')
+                    $this->query = str_replace($key, $value, $this->query);     //     ->where('id', '=', 3)
+                    unset($this->bindings[$key]);                               //     ->orWhere('id', '=', '%id%')->get()
+                }                                                               //     ->bindings(array('%id%' => 1), array('%id%' => QueryInterface::BINDING_STRING))
+                                                                                //      ->exec()->all()->array()
         }
 
-        $this->query = str_replace(array_keys($this->bindings), '?', $this->query);
+        $bindingTypes = '';
+        $bindingKeys = array();
+        $bindingValues = array();
+
+        foreach($this->bindings as $key => $value){
+            $bindingTypes .= $this->detectBindingType($key, $value);
+            $bindingKeys[] = $key;
+            $bindingValues[] = $value;
+        }
+
+        if($bindingKeys){
+            $this->query = str_replace($bindingKeys, '?', $this->query);
+        }
+
         $stmt = $this->mysqli->prepare($this->query);
 
         if($stmt instanceof mysqli_stmt){
-            $stmt->execute(array_values($this->bindings));
+//            $stmt->execute(array_values($this->bindings));    // enable php7.*
+            if($bindingValues){
+                $stmt->bind_param($bindingTypes, ...$bindingValues);
+            }
+
+            $stmt->execute();
             return $stmt;
         }
         return new Result();
+    }
+
+    protected function detectBindingType($type, $binding)
+    {
+        if(isset($this->bindingTypes[$type])){
+            return $this->bindingTypes[$type];
+        }
+
+        if(is_int($binding) || is_integer($binding)){
+            return QueryInterface::BINDING_TYPE_INTEGER;
+        }
+        if(is_float($binding) || is_double($binding)){
+            return QueryInterface::BINDING_TYPE_DOUBLE;
+        }
+        return QueryInterface::BINDING_TYPE_STRING;
     }
 
     protected function exception($code, $message, $method = __METHOD__, $line = __LINE__)

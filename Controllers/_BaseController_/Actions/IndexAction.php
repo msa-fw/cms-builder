@@ -7,8 +7,6 @@ use Controllers\_BaseController_\Forms\IndexForm;
 use Controllers\_BaseController_\Models\IndexModel;
 use System\Core\Router\RouterGetterInterface;
 
-use function response\url;
-
 class IndexAction extends Controller
 {
     /** @var  IndexForm */
@@ -25,8 +23,7 @@ class IndexAction extends Controller
 
     public function get()
     {
-        $this->form->createForm();
-        return $this->setForm();
+        return $this;
     }
 
     public function post()

@@ -59,11 +59,11 @@ class Validator implements ValidatorInterface
 
         /** @var Attributes|Types|Filters $validator */
 
-        if(isset($this->field['attributes']['__csrfTokenKey'])){
+        if($this->field['attributes']['__csrfTokenKey']){
             $this->validateCsrfToken();
         }
 
-        if(isset($this->field['attributes']['__captchaField'])){
+        if($this->field['attributes']['__captchaField']){
             $this->validateCaptcha();
         }
 

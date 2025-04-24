@@ -1,5 +1,9 @@
 <?php
 
+    use System\Helpers\Classes\Fs;
+    use function web\renderStyle;
+    use function web\renderScript;
+
 /**
  * @var array $data
  * @var integer $code
@@ -66,8 +70,8 @@ $content = function($file, $line, $index = 10){
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <?php print \web\renderStyle(\web\templateHttp('styles/errors')) ?>
-        <?php print \web\renderScript(\web\templateHttp('scripts/errors')) ?>
+        <?php print renderStyle(Fs::site()->theme('styles/errors')) ?>
+        <?php print renderScript(Fs::site()->theme('scripts/errors')) ?>
     </head>
     <body>
         <main class="content">
@@ -75,7 +79,7 @@ $content = function($file, $line, $index = 10){
                 <div class="head"><?php print $header ?></div>
                 <div class="body">
                     <div class="code-message">
-                        <div class="code">CODE #<?php print( isset($arguments[0]['CODE']) ? $arguments[0]['CODE'] : $code) ?></div>
+                        <div class="code">CODE #<?php print(isset($arguments[0]['CODE']) ? $arguments[0]['CODE'] : $code) ?></div>
                         <pre class="message"><?php print $message ?></pre>
                     </div>
                     <?php if($arguments){ ?>

@@ -1,7 +1,7 @@
 <?php
 
 use System\Singleton;
-use System\Core\Events;
+use System\Core\Console\Debug;
 
 $args = array_map('trim', $_SERVER['argv']);
 
@@ -11,7 +11,7 @@ $requestCommand = implode(' ', array_slice($args, 1));
 
 require_once __DIR__ . "/core.php";
 
-$consoleDebug = \System\Core\Console\Debug::start($requestCommand);
+$consoleDebug = Debug::start($requestCommand);
 
 // for calling error handler
 $debug = Singleton::Debug();
@@ -19,37 +19,35 @@ $debug = Singleton::Debug();
 
 $events = Singleton::Events();
 $events->loadControllersParams("configs/events.php");
-Events::afterEventsInitialize()->run($events);
+Singleton::Events()->afterEventsInitialize()->run($events);
 
 
-Events::beforeSystemStart()->run();
+Singleton::Events()->beforeSystemStart()->run();
 
 
 $config = Singleton::Config();
-Events::beforeConfigInitialize()->run($config);
+Singleton::Events()->beforeConfigInitialize()->run($config);
 
 $config->initialize();
 $config->loadControllersParams("configs/config.php");
-Events::afterConfigInitialize()->run($config);
+Singleton::Events()->afterConfigInitialize()->run($config);
 
 
 $language = Singleton::Language();
-Events::beforeLanguageInitialize()->run($language);
+Singleton::Events()->beforeLanguageInitialize()->run($language);
 
-$languageCode = $config->general('language')->read();
+$languageCode = $config->general('language')->read('en');
 $language->loadControllersParams("languages/$languageCode.php");
-
-Events::afterLanguageInitialize()->run($language);
-
+Singleton::Events()->afterLanguageInitialize()->run($language);
 
 $router = Singleton::Console();
 $router->loadControllersParams("configs/console.php");
-Events::beforeCommandLineRunning()->run($router, $requestCommand);
+Singleton::Events()->beforeCommandLineRunning()->run($router, $requestCommand);
 
 $result = $router->runController($requestCommand);
-Events::afterCommandLineRunning()->run($router, $result);
+Singleton::Events()->afterCommandLineRunning()->run($router, $result);
 
 
-Events::afterSystemStart()->run();
+Singleton::Events()->afterSystemStart()->run();
 
 $consoleDebug->end();

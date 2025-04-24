@@ -3,12 +3,12 @@
 namespace Controllers\_BaseController_\Console\Migration;
 
 use Exception;
+use System\Helpers\Classes\Fs;
 use Controllers\_BaseController_\Language;
 use System\Core\Database\Driver;
 
 use function console\danger;
 use function console\success;
-use function filesystem\root;
 use function filesystem\read;
 use function filesystem\write;
 use function console\warning;
@@ -24,7 +24,7 @@ abstract class AbstractMigrationClass
 
     protected function getFilesList($directory)
     {
-        $filesList = glob(root("{$this->rootDirectory}/$directory/*.php"));
+        $filesList = glob(Fs::server()->root("{$this->rootDirectory}/$directory/*.php"));
         usort($filesList, function($value1, $value2){
             preg_match("#_(\d+)\.php#usim", $value1, $match1);
             preg_match("#_(\d+)\.php#usim", $value2, $match2);
@@ -114,7 +114,7 @@ abstract class AbstractMigrationClass
             makeDirectory($destination);
 
             $dateStamp = date('Y-m-d');
-            $destination = root("$destination/{$dateStamp}_{$suffix}.php");
+            $destination = Fs::server()->root("$destination/{$dateStamp}_{$suffix}.php");
 
             if(write($destination, $content)){
                 success(Language::_BaseController_('console.migration.fileCreated')->string(true)->replace_k2v(array('%file%' => $destination)))->print();

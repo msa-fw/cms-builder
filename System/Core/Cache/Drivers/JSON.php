@@ -3,11 +3,10 @@
 namespace System\Core\Cache\Drivers;
 
 use System\Core\Cache\Common;
+use System\Helpers\Classes\Fs;
 use System\Core\Cache\Interfaces\DriverInterface;
 
-use function filesystem\root;
 use function filesystem\read;
-use function filesystem\getTmpPath;
 use function filesystem\makeDirectory;
 use function filesystem\scanDirectoryCallback;
 
@@ -45,7 +44,7 @@ class JSON extends Common implements DriverInterface
 
     public function defineCacheRoot()
     {
-        self::$cacheRoot = root(getTmpPath($this->config['directory'] . '/json'));
+        self::$cacheRoot = Fs::server()->temp($this->config['directory'] . '/json');
         makeDirectory(self::$cacheRoot);
         return $this;
     }

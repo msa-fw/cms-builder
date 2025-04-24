@@ -5,30 +5,6 @@ namespace filesystem;
 use function console\isCommandLineInterface;
 use System\Core\Config;
 
-function root($filePath)
-{
-    $filePath = trim($filePath, '/');
-    return ROOT . '/' . $filePath;
-}
-
-function publicRoot($filePath)
-{
-    $filePath = trim($filePath, '/');
-    return root(Config::template('publicDirectory')->read() . "/$filePath");
-}
-
-function template($filePath)
-{
-    $filePath = trim($filePath, '/');
-    return publicRoot("templates/$filePath");
-}
-
-function controller($filePath)
-{
-    $filePath = trim($filePath, '/');
-    return root("Controllers/$filePath");
-}
-
 function makeDirectory($directoryPath, $chmod = 0755)
 {
     if(!is_dir($directoryPath) && !is_file($directoryPath)){

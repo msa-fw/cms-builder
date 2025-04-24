@@ -27,7 +27,7 @@ class _Action_Action extends Controller
 
     public function get()
     {
-        $this->content->write($this->model->selectList());
+        $this->content->write($this->model->selectList(30));
 
         return $this->setForm();
     }

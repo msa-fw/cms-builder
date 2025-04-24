@@ -21,12 +21,12 @@ class IndexModel extends Model
     // $this->cache->key('setCustomPredefinedStaticCacheKeyName');
     protected $cacheKeyPath = '_BaseController_.Index';
 
-    public function selectList()
+    public function selectList($limit, $offset = 0)
     {
         $query = $this->table->select('*')
             ->where('id', '>', 30)
             ->order('id', 'asc')
-            ->limit(10)->get();
+            ->limit($limit, $offset)->get();
 
         return $this->findManyInCache($query)->array();
     }

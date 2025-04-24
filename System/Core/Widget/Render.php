@@ -2,8 +2,8 @@
 
 namespace System\Core\Widget;
 
+use System\Helpers\Classes\Fs;
 use function web\render;
-use function web\templateRoot;
 
 class Render
 {
@@ -13,11 +13,15 @@ class Render
 
     protected $widgetName = null;
 
+    protected $server;
+
     public function __construct($key, &$widgets, $widgetName = null)
     {
         $this->key = $key;
         $this->widgets = &$widgets;
         $this->widgetName = $widgetName;
+
+        $this->server = Fs::server();
     }
 
     public function renderWidgets()
@@ -49,7 +53,7 @@ class Render
             $widget['templateFile'] = str_replace('\\', '/', $widget['class']) . ".html";
         }
 
-        $widget['templateFile'] = templateRoot($widget['templateFile']);
+        $widget['templateFile'] = $this->server->theme($widget['templateFile']);
 
         if(file_exists($widget['templateFile'])){
             if($result = render($widget['templateFile'], $widget)){
@@ -58,7 +62,7 @@ class Render
         }
 
         if(isset($widget['content']) && !empty($widget['content'])){
-            $filePath = templateRoot("assets/system/widget.html");
+            $filePath = $this->server->theme("assets/system/widget.html");
             return render($filePath, $widget);
         }
         return false;

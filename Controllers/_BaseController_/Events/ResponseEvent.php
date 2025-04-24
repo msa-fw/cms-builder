@@ -5,9 +5,9 @@ namespace Controllers\_BaseController_\Events;
 use System\Core\Config;
 use System\Core\Router;
 use System\Core\Response;
+use System\Helpers\Classes\Fs;
 
 use function language\translate;
-use function web\templateHttp;
 
 class ResponseEvent
 {
@@ -28,7 +28,7 @@ class ResponseEvent
         Response::meta('http-equiv')->custom('http-equiv', 'X-UA-Compatible')->content('IE=edge');
 
         $icon = Config::template('siteIcon')->read();
-        Response::icon(templateHttp($icon));
+        Response::icon(Fs::site()->theme($icon));
 
         $siteName = Config::template('siteName')->read();
         Response::title('main', $siteName);

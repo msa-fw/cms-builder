@@ -3,6 +3,8 @@
 namespace System;
 
 use System\Core\Config;
+use System\Core\Database;
+use System\Helpers\Classes\Fs;
 use System\Core\Console\Dialog;
 
 use function console\danger;
@@ -10,12 +12,10 @@ use function console\message;
 use function console\success;
 use function console\warning;
 use function strings\generate;
-use function filesystem\root;
 use function filesystem\read;
 use function filesystem\write;
 use function filesystem\makeDirectory;
 use function filesystem\scanDirectoryCallback;
-use System\Core\Database;
 
 /**
  * Only CLI-mode
@@ -45,11 +45,15 @@ class Installer
         'htaccess' => '_.htaccess',
     );
 
+    protected $server;
+
     public function __construct()
     {
+        $this->server = Fs::server();
+
         $this->sourceFiles['self'] = $_SERVER['PHP_SELF'];
-        $this->sourceFiles['config'] = root($this->sourceFiles['config']);
-        $this->sourceFiles['htaccess'] = root($this->sourceFiles['htaccess']);
+        $this->sourceFiles['config'] = $this->server->root($this->sourceFiles['config']);
+        $this->sourceFiles['htaccess'] = $this->server->root($this->sourceFiles['htaccess']);
     }
 
     public function setSiteName()
@@ -162,15 +166,15 @@ class Installer
             );
 
             $config = str_replace(array_keys($replace), array_values($replace), $config);
-            file_put_contents(root('config.php'), $config);
+            file_put_contents($this->server->root('config.php'), $config);
         }
 
         if($htaccess = file_get_contents($this->sourceFiles['htaccess'])){
             $htaccess = str_replace(array('[_SiteName_]', '[_WEB_]'), array($this->answers['siteName'], $this->answers['publicDir']), $htaccess);
-            file_put_contents(root('.htaccess'), $htaccess);
+            file_put_contents($this->server->root('.htaccess'), $htaccess);
         }
 
-        rename(root('web'), root($this->answers['publicDir']));
+        rename($this->server->root('web'), $this->server->root($this->answers['publicDir']));
 
         scanDirectoryCallback(ROOT, function($file){
             if(is_file($file)){
@@ -208,6 +212,19 @@ class Installer
                     danger(" Error on deleting file $sourceFile ")->print();
                 }
             }
+        }
+    }
+
+    public function run($currentDirectory)
+    {
+        $dialog = new Dialog(warning(" Run system? (y/n) ")->get(''));
+
+        if($dialog->validate()->compare('y')->getStatus()){
+            $commandPath = PHP_BINARY . ' ' . $currentDirectory;
+
+            print shell_exec("{$commandPath}/cli migrate:run");
+            print shell_exec("{$commandPath}/cli migrate:run:fill");
+            print shell_exec("{$commandPath}/cli server:run");
         }
     }
 }

@@ -5,9 +5,9 @@ namespace System\Core\Debug;
 use System\Core\Config;
 use System\Core\Response;
 use System\Core\Language;
+use System\Helpers\Classes\Fs;
 
 use function web\render;
-use function web\templateRoot;
 
 class Html
 {
@@ -37,13 +37,13 @@ class Html
     public function render()
     {
         if(Config::general('debug')->read()){
-            $templateFile = templateRoot("assets/errors/debugError500.html");
+            $templateFile = Fs::server()->theme("assets/errors/debugError500.html");
             if(file_exists($templateFile)){
                 exit(render($templateFile, $this->arguments));
             }
         }
         if($this->arguments['isCritical']){
-            $templateFile = templateRoot("assets/errors/simple-error.html");
+            $templateFile = Fs::server()->theme("assets/errors/simple-error.html");
             if(file_exists($templateFile)){
                 exit(render($templateFile, $this->arguments));
             }

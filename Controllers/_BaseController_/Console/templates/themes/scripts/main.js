@@ -5,7 +5,7 @@ window.mainObj = {
 
     defined: function(val)
     {
-        return val !== null && val !== undefined
+        return val !== null && val !== undefined && val !== '';
     },
     include: function(url, callback)
     {
@@ -41,6 +41,9 @@ window.mainObj = {
             }
             button.innerHTML = '&check; ' + copyText;
         }
+    },
+    percent: function(value, percentage){
+        return (value / 100) * percentage;
     },
 
     modal: {
@@ -99,5 +102,37 @@ window.mainObj = {
             }
             return this;
         },
+    },
+    appendPopUpTitle: function(titleContent)
+    {
+        let div = document.createElement('div');
+        div.classList.add('absolute');
+        div.classList.add('absolute-removable');
+        div.innerHTML = titleContent;
+        div.style.top = (event.pageY - event.offsetY) - event.target.clientHeight + "px";
+        div.style.left = (event.pageX - event.offsetX) - event.target.clientHeight + "px";
+        document.body.appendChild(div);
     }
 };
+
+document.addEventListener('mouseover',function(event){
+    if(mainObj.defined(event.target.title)){
+        let titleContent = '<div class="title-content">' + event.target.title + '</div>';
+
+        event.target.dataset.title = event.target.title;
+        event.target.removeAttribute('title');
+
+        mainObj.appendPopUpTitle(titleContent);
+    }else
+        if(mainObj.defined(event.target.dataset.title)){
+            let titleContent = '<div class="title-content">' + event.target.dataset.title + '</div>';
+            mainObj.appendPopUpTitle(titleContent);
+        }
+});
+
+document.addEventListener('mouseout',function(event){
+    let titles = document.querySelectorAll('div.absolute-removable');
+    for(let i = 0; i < titles.length; i++){
+        titles[i].remove();
+    }
+});

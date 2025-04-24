@@ -2,17 +2,17 @@
 
 namespace Controllers\_BaseController_\Console;
 
-use function console\paint;
 use System\Core\Debug;
 use System\Core\Console;
 use System\Core\Database;
+use System\Helpers\Classes\Fs;
 use Controllers\_BaseController_\Config;
 use Controllers\_BaseController_\Language;
 
+use function console\paint;
 use function console\danger;
 use function console\message;
 use function console\success;
-use function filesystem\root;
 use function reflection\getClassPublicMethodsList;
 
 class TestCommand
@@ -21,9 +21,12 @@ class TestCommand
     /** @var Console\ConsoleInterface */
     protected $console;
 
+    protected $server;
+
     public function __construct(Console\ConsoleInterface $console)
     {
         $this->console = $console;
+        $this->server = Fs::server();
 
         Debug::shutdownTrigger(false);
 
@@ -66,7 +69,7 @@ class TestCommand
 
     public function runAll()
     {
-        $controllerTestClassesDirectory = root("Controllers");
+        $controllerTestClassesDirectory = $this->server->root("Controllers");
 
         foreach(scandir($controllerTestClassesDirectory) as $controller){
             if($controller == '.' || $controller == '..'){ continue; }
@@ -83,7 +86,7 @@ class TestCommand
 
     public function runController($controller)
     {
-        $controllerTestClassesDirectory = root("Controllers/{$controller}/Tests");
+        $controllerTestClassesDirectory = $this->server->root("Controllers/{$controller}/Tests");
 
         foreach(scandir($controllerTestClassesDirectory) as $file){
             if($file == '.' || $file == '..'){ continue; }

@@ -7,24 +7,23 @@
  * @var string $formName
  */
 
+use System\Helpers\Classes\Fs;
 use System\Core\Template\Render\HTML;
 
-use function web\templateRoot;
 use function templates\attributes2string;
 
 ?>
 
 <?php foreach($fields as $field){ ?>
-    <?php $labelExist = isset($field['label']) && !empty($field['label']) ?>
 
-    <?php if($labelExist){ ?>
-        <div class="field-set">
-        <label class="field-label" for="<?php print $field['attributes']['id'] ?>" <?php print attributes2string($field['label']['attributes']) ?>>
-            <?php print $field['label']['value'] ?>
-        </label>
-    <?php } ?>
+    <div class="field-set">
+        <?php if($field['label']){ ?>
+            <label class="field-label" for="<?php print $field['attributes']['id'] ?>" <?php print attributes2string($field['label']['attributes']) ?>>
+                <?php print $field['label']['value'] ?>
+            </label>
+        <?php } ?>
 
-        <?php if(isset($field['errors'])){ ?>
+        <?php if($field['errors']){ ?>
             <div class="field-errors">
                 <?php foreach($field['errors'] as $error){ ?>
                     <div class="field-error"><?php print $error ?></div>
@@ -35,31 +34,32 @@ use function templates\attributes2string;
         <div class="form-field">
             <?php
 
-            if(isset($field['attributes']['value']) || !empty($field['attributes']['value'])){
-                $value = $field['attributes']['value'];
-            }else{
-                $value = $field['default'];
-            }
+                if($field['attributes']['value']){
+                    $value = $field['attributes']['value'];
+                }else{
+                    $value = $field['default'];
+                }
 
-            $field['attributes']['class'] =  "{$field['type']} {$field['attributes']['class']} {$field['fieldType']}";
+                $field['attributes']['class'] =  "{$field['type']} {$field['attributes']['class']} {$field['fieldType']}";
 
-            $fieldName = $field['name'];
-            if($formName){
-                $fieldName = "{$formName}[{$field['name']}]";
-            }
+                $fieldName = $field['name'];
+                if($formName){
+                    $fieldName = "{$formName}[{$field['name']}]";
+                }
 
-            $templateFilePath = templateRoot("assets/fields/{$field['fieldType']}/{$field['type']}.html");
+                if(!$field['template']){
+                    $field['template'] = "assets/fields/{$field['fieldType']}/{$field['type']}.html";
+                }
 
-            if(file_exists($templateFilePath)){
-                include $templateFilePath;
-            }
-
+                $field['template'] = Fs::server()->theme($field['template']);
+                if(file_exists($field['template'])){
+                    include $field['template'];
+                }
             ?>
         </div>
 
-        <?php if(isset($field['description']) && !empty($field['description'])){ ?>
+        <?php if($field['description']){ ?>
             <small class="field-description"><?php print $field['description'] ?></small>
         <?php } ?>
-
-    <?php if($labelExist){ ?></div><?php } ?>
+    </div>
 <?php } ?>

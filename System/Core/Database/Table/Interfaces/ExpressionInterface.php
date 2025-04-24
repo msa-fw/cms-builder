@@ -67,7 +67,8 @@ interface ExpressionInterface
 
     /**
      * @param array $bindings
+     * @param array $bindingTypes
      * @return ResultInterface
      */
-    public function exec(array $bindings = array());
+    public function exec(array $bindings = array(), array $bindingTypes = array());
 }

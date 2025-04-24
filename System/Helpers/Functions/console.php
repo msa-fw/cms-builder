@@ -2,6 +2,7 @@
 
 namespace console;
 
+use System\Core\Console\Dialog;
 use System\Core\Console\Output;
 use System\Core\Console\Output\Color;
 
@@ -38,4 +39,9 @@ function success($message)
 function danger($message)
 {
     return message($message, 'white', 'brightRed');
+}
+
+function dialog($message, $printHeader = false)
+{
+    return new Dialog($message, $printHeader);
 }

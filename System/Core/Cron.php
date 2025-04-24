@@ -3,16 +3,15 @@
 namespace System\Core;
 
 use System\Core\Cron\Builder;
+use System\Helpers\Classes\Fs;
 use System\Traits\Autoloader;
 
 use function console\paint;
 use function console\danger;
 use function console\success;
 use function console\warning;
-use function filesystem\root;
 use function filesystem\read;
 use function filesystem\write;
-use function filesystem\getTmpPath;
 use function filesystem\makeDirectory;
 
 class Cron
@@ -60,7 +59,7 @@ class Cron
 
     public function __construct()
     {
-        $this->cronDirectory = root(getTmpPath("cron"));
+        $this->cronDirectory = Fs::server()->temp("cron");
         makeDirectory($this->cronDirectory);
     }
 

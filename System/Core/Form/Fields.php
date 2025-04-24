@@ -9,6 +9,7 @@ use System\Core\Form\Fields\Input;
 use System\Core\Form\Fields\Select;
 use System\Core\Form\Fields\Button;
 use System\Core\Form\Fields\Common;
+
 use function response\url;
 
 /**
@@ -27,46 +28,36 @@ class Fields
     public function input($fieldName, $fieldSet = null)
     {
         $fieldSet = $fieldSet ?: __FUNCTION__;
-        $this->fields[$fieldName]['fieldType'] = 'input';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = $fieldSet;
+        $this->field($fieldName, 'input', $fieldSet);
         return new Input($fieldName, $this->fields[$fieldName]);
     }
 
     public function button($fieldName, $fieldSet = null)
     {
         $fieldSet = $fieldSet ?: __FUNCTION__;
-        $this->fields[$fieldName]['fieldType'] = 'button';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = $fieldSet;
+        $this->field($fieldName, 'button', $fieldSet);
         return new Button($fieldName, $this->fields[$fieldName]);
     }
 
     public function select($fieldName, $fieldSet = null)
     {
         $fieldSet = $fieldSet ?: __FUNCTION__;
-        $this->fields[$fieldName]['fieldType'] = 'select';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = $fieldSet;
+        $this->field($fieldName, 'select', $fieldSet);
         return new Select($fieldName, $this->fields[$fieldName]);
     }
 
     /**
      * @param $fieldName
+     * @param null $fieldSet
      * @return Attributes
      */
-    public function captcha($fieldName)
+    public function captcha($fieldName, $fieldSet = null)
     {
-        $this->fields[$fieldName]['fieldType'] = 'captcha';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = __FUNCTION__;
-
-        $captchaLink = url('updateCaptchaAction')
-            ->query(array('field' => $fieldName))
-            ->build()->get();
+        $fieldSet = $fieldSet ?: __FUNCTION__;
+        $this->field($fieldName, 'captcha', $fieldSet);
 
         $input = new Input($fieldName, $this->fields[$fieldName]);
-        $attributes = $input->text($captchaLink)
+        $attributes = $input->text()
             ->class('captcha-field');
 
         $attributes->attribute('__captchaField', true);
@@ -77,11 +68,10 @@ class Fields
         return $attributes;
     }
 
-    public function csrf($fieldName)
+    public function csrf($fieldName, $fieldSet = null)
     {
-        $this->fields[$fieldName]['fieldType'] = 'input';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = __FUNCTION__;
+        $fieldSet = $fieldSet ?: __FUNCTION__;
+        $this->field($fieldName, 'input', $fieldSet);
 
         $input = new Input($fieldName, $this->fields[$fieldName]);
         $input->hidden(Form::getCsrfToken($fieldName));
@@ -94,9 +84,7 @@ class Fields
     public function textArea($fieldName, $fieldSet = null)
     {
         $fieldSet = $fieldSet ?: __FUNCTION__;
-        $this->fields[$fieldName]['fieldType'] = 'textarea';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = $fieldSet;
+        $this->field($fieldName, 'textarea', $fieldSet);
         $this->fields[$fieldName]['type'] = 'textarea';
 
         $attributes = new Common($fieldName, $this->fields[$fieldName]);
@@ -108,9 +96,7 @@ class Fields
     public function html($fieldName, $fieldSet = null)
     {
         $fieldSet = $fieldSet ?: __FUNCTION__;
-        $this->fields[$fieldName]['fieldType'] = 'html';
-        $this->fields[$fieldName]['name'] = $fieldName;
-        $this->fields[$fieldName]['fieldSet'] = $fieldSet;
+        $this->field($fieldName, 'html', $fieldSet);
         $this->fields[$fieldName]['type'] = 'html';
 
         return new Html($fieldName, $this->fields[$fieldName]);
@@ -118,11 +104,35 @@ class Fields
 
     public function field($fieldName, $fieldType, $fieldSet = null)
     {
+        $this->initializeFieldDefaultParams($fieldName);
+
         $fieldSet = $fieldSet ?: __FUNCTION__;
         $this->fields[$fieldName]['name'] = $fieldName;
         $this->fields[$fieldName]['fieldType'] = $fieldType;
         $this->fields[$fieldName]['fieldSet'] = $fieldSet;
 
         return new Common($fieldName, $this->fields[$fieldName]);
+    }
+
+    protected function initializeFieldDefaultParams($fieldName)
+    {
+        $this->fields[$fieldName] = array(
+            'name' => null,
+            'fieldType' => null,
+            'fieldSet' => null,
+            'errors' => array(),
+            'attributes' => array(
+                'value' => null,
+                'class' => null,
+                'multiple' => null,
+                'accept' => null,
+                '__csrfTokenKey' => null,
+                '__captchaField' => null,
+            ),
+            'label' => null,
+            'description' => null,
+            'template' => '',
+        );
+        return $this;
     }
 }

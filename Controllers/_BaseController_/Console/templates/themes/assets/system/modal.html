@@ -4,13 +4,12 @@
  * @var array $data
  */
 
+use System\Helpers\Classes\Fs;
 use System\Core\Template\Render\HTML;
 
 use function web\render;
-use function web\templateHttp;
-use function web\templateRoot;
 
-HTML::addCss(templateHttp('styles/modal'), HTML::SCRIPT_STYLE_POSITION_FOOTER);
+HTML::addCss(Fs::site()->theme('styles/modal'), HTML::SCRIPT_STYLE_POSITION_FOOTER);
 
 $hash = '';
 
@@ -20,9 +19,9 @@ if($data['ajax']){
 
     $hash = ", {$data['ajax']['ajaxObjectName']}";
 
-    print render(templateRoot($data['ajax']['template']), $data['ajax']);
+    print render(Fs::server()->theme($data['ajax']['template']), $data['ajax']);
 
-    $data['content'] = '<div class="ajax-loader"><img src="' . templateHttp($data['ajax']['loader']) . '"></div>';
+    $data['content'] = '<div class="ajax-loader"><img src="' . Fs::site()->theme($data['ajax']['loader']) . '"></div>';
 }
 
 ?>

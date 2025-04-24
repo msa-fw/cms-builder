@@ -199,22 +199,22 @@ class _String
         return mb_ereg_match($pattern, $this->subject, $options);
     }
 
-    public function mb_ereg_replace($pattern, $replacement, $options = null)
+    public function mb_ereg_replace($pattern, $replacement, $options = 'msr')
     {
         return mb_ereg_replace($pattern, $replacement, $this->subject, $options);
     }
 
-    public function mb_ereg_replace_callback($pattern, callable $callback, $options = null)
+    public function mb_ereg_replace_callback($pattern, callable $callback, $options = 'msr')
     {
         return mb_ereg_replace_callback($pattern, $callback, $this->subject, $options);
     }
 
-    public function mb_eregi($pattern, array &$matches = null)
+    public function mb_eregi($pattern, array &$matches = array())
     {
         return mb_eregi($pattern, $this->subject, $matches);
     }
 
-    public function mb_eregi_replace($pattern, $replacement, $options = null)
+    public function mb_eregi_replace($pattern, $replacement, $options = 'msr')
     {
         return mb_eregi_replace($pattern, $replacement, $this->subject, $options);
     }

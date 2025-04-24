@@ -16,10 +16,10 @@ class Select extends Expression
         return $this->driver->select($this);
     }
 
-    public function exec(array $bindings = array())
+    public function exec(array $bindings = array(), array $bindingTypes = array())
     {
         $query = $this->get();
-        $query->bindings($bindings);
+        $query->bindings($bindings, $bindingTypes);
         return $query->exec();
     }
 }

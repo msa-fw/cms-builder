@@ -13,11 +13,11 @@
 use System\Core\Template\Render\HTML;
 use function templates\attributes2string;
 
-if(isset($field['attributes']['multiple']) && !empty($field['attributes']['multiple'])){
+if($field['attributes']['multiple']){
     $fieldName = "{$fieldName}[]";
 }
 
-if(isset($field['attributes']['accept']) && is_array($field['attributes']['accept'])){
+if($field['attributes']['accept']){
     $field['attributes']['accept'] = implode(', ', $field['attributes']['accept']);
 }
 
