@@ -2,6 +2,7 @@
 
 namespace Controllers\_BaseController_\Actions;
 
+use System\Core\Form\Fields;
 use Controllers\_BaseController_\Controller;
 use Controllers\_BaseController_\Forms\IndexForm;
 use Controllers\_BaseController_\Models\IndexModel;
@@ -23,7 +24,10 @@ class IndexAction extends Controller
 
     public function get()
     {
-        return $this;
+        $this->form->create('', function(Fields $field){
+            $field->html('d')->wysiwyg();
+        });
+        return $this->setForm();
     }
 
     public function post()

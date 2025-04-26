@@ -67,10 +67,12 @@ Language::_BaseController_('console.server.startedEscape')->write(" Для ос�
 Language::_BaseController_('console.tests.runAll')->write("Выполнить все задекларированные тесты");
 Language::_BaseController_('console.tests.runController')->write("Выполнить все тесты контроллера");
 Language::_BaseController_('console.tests.runControllerClass')->write("Выполнить конкретный тест контроллера");
+Language::_BaseController_('console.tests.runControllerClassMethod')->write("Выполнить конкретный метод теста контроллера (список входящих аргументов неограничен)");
 Language::_BaseController_('console.tests.classNotFound')->write("Класс `%class%` не существует");
 Language::_BaseController_('console.tests.action')->write("Задача `%class%::%method%()` ");
-Language::_BaseController_('console.tests.actionSuccess')->write(" ВЫПОЛНЕНА ");
-Language::_BaseController_('console.tests.actionError')->write(" ПРОВАЛЕНА ");
+Language::_BaseController_('console.tests.actionSuccess')->write(" ВЫПОЛНЕНА (за %time% сек)");
+Language::_BaseController_('console.tests.actionError')->write(" ПРОВАЛЕНА (после %time% сек)");
+Language::_BaseController_('console.tests.skippedByRequiredParams')->write(" ПРОПУЩЕНА (дефицит входящих аргументов)");
 Language::_BaseController_('console.tests.controllerExecution')->write("Выполненяется контроллер `%controller%`");
 Language::_BaseController_('console.tests.classExecution')->write("Выполненяется класс `%action%` из контроллера `%controller%`");
 Language::_BaseController_('console.tests.classMethodExecution')->write("Выполненяется метод `%action%::%method%()` из контроллера `%controller%`");

@@ -13,6 +13,8 @@ use function console\paint;
 use function console\danger;
 use function console\message;
 use function console\success;
+use function console\warning;
+use function reflection\countMethodRequiredParams;
 use function reflection\getClassPublicMethodsList;
 
 class TestCommand
@@ -77,7 +79,7 @@ class TestCommand
             message(
                 Language::_BaseController_('console.tests.controllerExecution')
                     ->string(true)->replace_k2v(array('%controller%' => $controller))
-            )->print(Console::SPACE . date('H:i:s, d M, Y') . PHP_EOL);
+            )->print(' ' . date('H:i:s, d M, Y') . PHP_EOL);
 
             $this->runController($controller);
         }
@@ -96,7 +98,7 @@ class TestCommand
             message(
                 Language::_BaseController_('console.tests.classExecution')->string(true)
                     ->replace_k2v(array('%controller%' => $controller, '%action%' => $fileName))
-            )->print(Console::SPACE . date('H:i:s, d M, Y') . PHP_EOL);
+            )->print(' ' . date('H:i:s, d M, Y') . PHP_EOL);
 
             $this->runControllerAction($controller, $fileName);
         }
@@ -111,27 +113,15 @@ class TestCommand
 
         $className = "\\Controllers\\{$controller}\\Tests\\{$action}";
         if(class_exists($className)){
-            $classObject = new $className();
-
             foreach(getClassPublicMethodsList($className) as $item){
                 $method = $item->getName();
 
                 if($method == '__construct'){ continue; }
 
-                /*message(translate('_BaseController_.console.tests.classMethodExecution', array(
-                    '%controller%' => $controller,
-                    '%action%' => $action,
-                    '%method%' => $method,
-                )))->print(Console::SPACE . date('H:i:s, d M, Y') . PHP_EOL);*/
+                paint(Language::_BaseController_('console.tests.action')->string(true)
+                    ->replace_k2v(array('%class%' => $className, '%method%' => $method)))->fon()->fonCyan()->print(' --> ');
 
-                paint(Language::_BaseController_('console.tests.action')->string(true)->replace_k2v(array('%class%' => $className, '%method%' => $method)))
-                    ->fon()->fonCyan()->print(' --> ');
-
-                if($this->executeMethod($classObject, $method)){
-                    success(Language::_BaseController_('console.tests.actionSuccess')->returnKey())->print(Console::SPACE . date('H:i:s, d M, Y') . PHP_EOL);
-                }else{
-                    danger(Language::_BaseController_('console.tests.actionError')->returnKey())->print(Console::SPACE . date('H:i:s, d M, Y') . PHP_EOL);
-                }
+                $this->executeMethod($controller, $action, $method);
 
                 if($sleep){
                     usleep($sleep);
@@ -139,18 +129,41 @@ class TestCommand
             }
             return $this;
         }
-        danger(Language::_BaseController_('console.tests.classNotFound')->returnKey())->print();
+        danger(Language::_BaseController_('console.tests.classNotFound')
+            ->string()->replace_k2v(array('%class%' => $className)))->print();
+
         return $this;
     }
 
-    public function executeMethod($classObject, $method)
+    public function executeMethod($controller, $action, $method)
     {
-        return call_user_func_array(array($classObject, $method), array());
+        $className = "\\Controllers\\{$controller}\\Tests\\{$action}";
+        $arguments = $this->useAlternativeRouting($controller, $method);
+
+        if(count($arguments) < countMethodRequiredParams($className, $method)){
+            warning(Language::_BaseController_('console.tests.skippedByRequiredParams')->returnKey())->print();
+            return false;
+        }
+
+        $classObject = new $className();
+        $timer = microtime(true);
+        $result = call_user_func_array(array($classObject, $method), $arguments);
+        $timer = number_format(microtime(true) - $timer, 10, '.', ' ');
+
+        if($result){
+            success(Language::_BaseController_('console.tests.actionSuccess')
+                ->string()->replace_k2v(array('%time%' => $timer)))->print(' ' . date('H:i:s, d M, Y') . PHP_EOL);
+            return $result;
+        }
+        danger(Language::_BaseController_('console.tests.actionError')
+            ->string()->replace_k2v(array('%time%' => $timer)))->print(' ' . date('H:i:s, d M, Y') . PHP_EOL);
+        return false;
     }
 
     public static function catchError($code, $message, $file, $line, $context = null)
     {
         self::rollback();
+
         Debug::shutdownTrigger(true);
         return Debug::catchError($code, $message, $file, $line, $context);
     }
@@ -160,12 +173,24 @@ class TestCommand
         if (@is_array($e = @error_get_last())) {
             $code = isset($e['type']) ? $e['type'] : 0;
             if ($code > 0) {
-
                 self::rollback();
+
                 Debug::shutdownTrigger(true);
                 return Debug::catchFatalError();
             }
         }
         return false;
+    }
+
+    protected function useAlternativeRouting($controller, &$method)
+    {
+        if($index = array_search($controller, $_SERVER['argv'])){
+            $arguments = array_slice($_SERVER['argv'], $index);
+            if(isset($arguments[2])){
+                $method = $arguments[2];
+            }
+            return array_slice($arguments, 3);
+        }
+        return array();
     }
 }

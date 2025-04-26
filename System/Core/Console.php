@@ -16,8 +16,6 @@ use function reflection\countMethodRequiredParams;
  */
 class Console extends Encapsulation implements ConsoleInterface
 {
-    const SPACE = ' ';
-
     use Autoloader;
 
     protected static $commands = array();

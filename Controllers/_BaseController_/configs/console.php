@@ -56,6 +56,7 @@ Console::_BaseController_('lang:add [controller] [iso code]')->action(LanguageCo
 Console::_BaseController_('test:run')->action(TestCommand::class, 'runAll')->faq('_BaseController_.console.tests.runAll');
 Console::_BaseController_('test:run [controller]')->action(TestCommand::class, 'runController')->faq('_BaseController_.console.tests.runController');
 Console::_BaseController_('test:run [controller] [className]')->action(TestCommand::class, 'runControllerAction')->faq('_BaseController_.console.tests.runControllerClass');
+Console::_BaseController_('test:run [controller] [className] [method]')->action(TestCommand::class, 'executeMethod')->faq('_BaseController_.console.tests.runControllerClassMethod');
 
 Console::_BaseController_('server:run [host = 127.0.0.1 : port = 8080]')->action(ServerCommand::class, 'runServer')
     ->pattern('#^server:run(\s+[\w\.]+)?(\:\d+)?$#usm')->faq('_BaseController_.console.server.runServer');

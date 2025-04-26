@@ -31,21 +31,32 @@ class Debug
     public function end()
     {
         $eol = " | ";
-        $limitLine = str_repeat('-', 100);
+        $limitLine = str_repeat('-', 150);
 
         message(PHP_EOL . $limitLine, 'white')->print();
+
+        paint('PHP ' . phpversion())->colorWhite()->fonBlue()->print(' / ');
+
         foreach($this->headers as $line){
             $line = paint($line)->colorWhite()->fonMagenta()->get('');
-            message(Language::System('console.debug.addictedLine')->string(true)->replace_k2v(array('%line%' => $line)))->print(": ");
+
+            message(Language::System('console.debug.addictedLine')
+                ->string(true)->replace_k2v(array('%line%' => $line)))->print(": ");
         }
 
         $time = success(' ' . number_format(microtime(true) - $this->timer, 5, '.', ',') . ' ')->get('');
         $mem = success(' ' . number_format((memory_get_usage()-$this->memory)/1024, 3, '.', ',') . ' ')->get('');
         $peak = success(' ' . number_format((memory_get_peak_usage())/1024, 3, '.', ',') . ' ')->get('');
 
-        message(Language::System('console.debug.pageGenerationTime')->string(true)->replace_k2v(array('%time%' => $time)))->print($eol);
-        message(Language::System('console.debug.pageMemoryUsage')->string(true)->replace_k2v(array('%memory%' => $mem)))->print($eol);
-        message(Language::System('console.debug.pageMemoryUsagePeak')->string(true)->replace_k2v(array('%memory%' => $peak)))->print();
+        message(Language::System('console.debug.pageGenerationTime')
+            ->string(true)->replace_k2v(array('%time%' => $time)))->print($eol);
+
+        message(Language::System('console.debug.pageMemoryUsage')
+            ->string(true)->replace_k2v(array('%memory%' => $mem)))->print($eol);
+
+        message(Language::System('console.debug.pageMemoryUsagePeak')
+            ->string(true)->replace_k2v(array('%memory%' => $peak)))->print();
+
         message($limitLine, 'white')->print();
     }
 }

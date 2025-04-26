@@ -7,7 +7,8 @@ $args = array_map('trim', $_SERVER['argv']);
 
 define("CLI_ROOT_PATH", $args[0]);
 
-$requestCommand = implode(' ', array_slice($args, 1));
+$arguments = array_slice($args, 1);
+$requestCommand = implode(' ', $arguments);
 
 require_once __DIR__ . "/core.php";
 
