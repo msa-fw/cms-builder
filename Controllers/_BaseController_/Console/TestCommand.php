@@ -19,7 +19,7 @@ use function reflection\getClassPublicMethodsList;
 
 class TestCommand
 {
-    public static $tmpDatabaseName;
+    protected static $tmpDatabaseName;
     /** @var Console\ConsoleInterface */
     protected $console;
 
@@ -118,9 +118,6 @@ class TestCommand
 
                 if($method == '__construct'){ continue; }
 
-                paint(Language::_BaseController_('console.tests.action')->string(true)
-                    ->replace_k2v(array('%class%' => $className, '%method%' => $method)))->fon()->fonCyan()->print(' --> ');
-
                 $this->executeMethod($controller, $action, $method);
 
                 if($sleep){
@@ -138,8 +135,10 @@ class TestCommand
     public function executeMethod($controller, $action, $method)
     {
         $className = "\\Controllers\\{$controller}\\Tests\\{$action}";
-        $arguments = $this->useAlternativeRouting($controller, $method);
+        paint(Language::_BaseController_('console.tests.action')->string(true)
+            ->replace_k2v(array('%class%' => $className, '%method%' => $method)))->fon()->fonCyan()->print(' --> ');
 
+        $arguments = $this->useAlternativeRouting($controller, $method);
         if(count($arguments) < countMethodRequiredParams($className, $method)){
             warning(Language::_BaseController_('console.tests.skippedByRequiredParams')->returnKey())->print();
             return false;

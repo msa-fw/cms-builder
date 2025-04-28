@@ -3,6 +3,7 @@
 namespace Controllers\_BaseController_\Events;
 
 use Controllers\_BaseController_\Config;
+use function response\compressHtml;
 use System\Core\Template\Interfaces\RenderInterface;
 
 class RenderEvent
@@ -18,8 +19,8 @@ class RenderEvent
     public function compressHtmlContent()
     {
         if(Config::template('compressHtml')->read()){
-            $content = str_replace(array("\n","\r","\t"), '', $this->render->getDataContentResult());
-            $content = preg_replace(array('/<!--(.*)-->/Uis',"/[[:blank:]]+/"), array('',' '), $content);
+            $content = $this->render->getDataContentResult();
+            $content = compressHtml($content);
             $this->render->setDataContentResult($content);
             return $this;
         }

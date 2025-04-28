@@ -5,15 +5,21 @@ namespace System\Helpers\Classes;
 use DOMDocument, DOMXPath, DOMAttr;
 use System\Helpers\Classes\HtmlCleaner\Builder;
 
+use function response\compressHtml;
+
 class HtmlCleaner
 {
-    protected static $debug = array();
-
     protected $content;
+
+    protected $useInternalErrors;
+
+    protected $charset;
 
     protected $allowed = array();
 
     protected $removable = array();
+
+    protected $removeComments = false;
 
     protected $nonClosestTags = array(
         'area'      => true,
@@ -36,21 +42,16 @@ class HtmlCleaner
         'frame'     => true,
     );
 
-    public function __construct($content)
-    {
-        self::$debug['startTime'] = microtime(true);
-        self::$debug['startMemory'] = memory_get_usage();
+    protected $errors = array();
 
+    public function __construct($content, $useInternalErrors = true)
+    {
         $this->content = trim($content);
+        $this->useInternalErrors = $useInternalErrors;
     }
 
     public function __destruct()
-    {
-        /*pre(
-            number_format(microtime(true) - self::$debug['startTime'], 10, '.', ','),
-            number_format(memory_get_usage() - self::$debug['startMemory'], 2, '.', ',')
-        );*/
-    }
+    {}
 
     /**
      * @param callable|Builder $allowedTagsList
@@ -69,95 +70,165 @@ class HtmlCleaner
         return $this;
     }
 
+    public function removeComments($trigger = true)
+    {
+        $this->removeComments = $trigger;
+        return $this;
+    }
+
+    /**
+     * @php-version-only 7.2 - 8.1
+     * @fix Incorrect decoding from www.bing.com and another UTF-8 broken encoding HTML-pages
+     * @param $charset
+     * @return $this
+     */
+    public function setCharset($charset = null)
+    {
+        if(!$charset){
+            $charset = mb_detect_encoding($this->content, 'auto');
+        }
+        $this->charset = $charset;
+        return $this;
+    }
+
     public function clean()
     {
-        $doc = new DOMDocument();
-        $doc->loadHTML($this->content);
+        libxml_use_internal_errors($this->useInternalErrors);
 
-        $xpath = new DOMXPath($doc);
+        $document = new DOMDocument();
+
+        if($this->charset){
+            $document->loadHTML(mb_convert_encoding($this->content, 'HTML-ENTITIES', $this->charset));
+        }else{
+            $document->loadHTML($this->content);
+        }
+
+        $xpath = new DOMXPath($document);
         $nodes = $xpath->query("/*");
 
         $content = '';
         foreach($nodes as $node){
             $content .= $this->parseDomObject($node);
         }
+
+        $this->errors = libxml_get_errors();
+        libxml_clear_errors();
+
         return $content;
     }
 
     /**
      * @param \DOMElement|\DOMText $node
+     * @param null $parentTag
      * @return string
      */
-    protected function parseDomObject($node)
+    protected function parseDomObject($node, $parentTag = null)
     {
         if($node->childNodes->length > 0){
             $content = '';
             foreach($node->childNodes as $index => $child){
                 $name = mb_strtolower($child->nodeName);
+                /**
+                 * @fix Skip HTML-comment string (expl: `<!--<textarea"></textarea>-->`)
+                 */
+                if($name == '#comment'){
+                    if(!$this->removeComments){
+                        $content .= "<!--{$child->textContent}-->\n";
+                    }
+                    continue;
+                }
 
                 if(isset($this->removable[$name])){
-                    $content .= $this->checkRemovableTag($child, $this->removable[$name]);
+                    $content .= $this->checkRemovableTag($child, $node, $this->removable[$name]);
                 }else
-                if(isset($this->allowed[$name])){
-                    $content .= $this->checkAllowedTag($child, $this->allowed[$name]);
-                }else{
-                    $content .= $this->parseDomObject($child);
-                }
+                    if(isset($this->allowed[$name])){
+                        if(isset($this->allowed[$name]['options']['node'])){
+                            /**
+                             * @fix Exclude nested child elements (expl: `<pre><code></code></pre>`)
+                             * @see Attributes::node() - use callback for customize if needed
+                             */
+                            $content .= call_user_func($this->allowed[$name]['options']['node'], $child, $this);
+                        }else{
+                            $content .= $this->checkAllowedTag($child, $node, $this->allowed[$name]);
+                        }
+                    }else{
+                        $content .= $this->parseDomObject($child, $node->nodeName);
+                    }
             }
             return $content;
         }
-        return $node->textContent;
+        if(isset($this->allowed[$parentTag]['options']['text'])){
+            return call_user_func($this->allowed[$parentTag]['options']['text'], $node);
+        }
+        /**
+         * @fix Quote HTML-comment string (expl: `<!--<textarea"></textarea>-->`)
+         */
+        if($node->nodeName == '#comment'){
+            if($this->removeComments){
+                return '';
+            }
+            return "<!--{$node->textContent}-->\n";
+        }
+        /**
+         * @fix Quote tags in JSON structure (expl: `wysiwyg.addLang('[{"<h1></h1>"}]')`)
+         * @see Attributes::text() - use callback for customize if needed
+         */
+        return htmlspecialchars(trim($node->textContent));
     }
 
-    protected function checkRemovableTag($child, array $options)
+    protected function checkRemovableTag($child, $parent, array $options)
     {
         $content = '';
         if($cleaned = $this->validateTag($child, $this->removable)){
             $name = mb_strtolower($child->nodeName);
 
-            $content .= "<{$name}";
-            $content .= " {$cleaned}";
-
             if(!isset($this->nonClosestTags[$name])){
-                $content .= ">\n";
-                $content .= $this->parseDomObject($child);
+                $content .= "<{$name}";
+                $content .= " {$cleaned}>\n";
+                $content .= $this->parseDomObject($child, $parent->nodeName);
                 $content .= "\n</{$name}>";
             }else{
-                $content .= "/>\n";
+                $content .= "<{$name}";
+                $content .= " {$cleaned}/>";
             }
         }
         return $content;
     }
 
-    protected function checkAllowedTag($child, array $options)
+    protected function checkAllowedTag($child, $parent, array $options)
     {
         $content = '';
         if($cleaned = $this->validateTag($child, $this->allowed)){
             $name = mb_strtolower($child->nodeName);
 
-            $content .= "<{$name}";
-            $content .= " {$cleaned}";
-
             if(!isset($this->nonClosestTags[$name])){
-                $content .= ">\n";
-                $content .= $this->parseDomObject($child);
-                $content .= "\n</{$name}>";
+                if($result = $this->parseDomObject($child, $parent->nodeName)){
+                    $content .= "<{$name}";
+                    $content .= " {$cleaned}>\n";
+                    $content .= $result;
+                    $content .= "\n</{$name}>";
+                }else{
+                    if(isset($options['options']['removeEmptyTag']) && !$options['options']['removeEmptyTag']){
+                        $content .= "<{$name}";
+                        $content .= " {$cleaned}>\n";
+                        $content .= $result;
+                        $content .= "\n</{$name}>";
+                    }
+                }
             }else{
-                $content .= "/>\n";
+                $content .= "<{$name}";
+                $content .= " {$cleaned}/>";
             }
         }else{
-            if($options['opts']['removeTagWithoutAttributes']){
-                $content .= $this->parseDomObject($child);
+            if(isset($options['options']['removeTagWithoutAttributes']) && $options['options']['removeTagWithoutAttributes']){
+                $content .= $this->parseDomObject($child, $parent->nodeName);
             }else{
                 $name = mb_strtolower($child->nodeName);
 
-                $content .= "<{$name}";
                 if(!isset($this->nonClosestTags[$name])){
-                    $content .= ">\n";
-                    $content .= $this->parseDomObject($child);
+                    $content .= "<{$name}>\n";
+                    $content .= $this->parseDomObject($child, $parent->nodeName);
                     $content .= "\n</{$name}>";
-                }else{
-                    $content .= "/>\n";
                 }
             }
         }
@@ -195,5 +266,23 @@ class HtmlCleaner
             return "{$attrName}=\"{$attribute->nodeValue}\"";
         }
         return null;
+    }
+
+    public function getHtmlContent($node)
+    {
+        $html = '';
+        if($node->childNodes->length > 0){
+            foreach($node->childNodes as $child){
+                $document = new DOMDocument();
+                $document->appendChild($document->importNode($child,true));
+                $html .= $document->saveHTML();
+            }
+        }
+        return $html ?: $node->textContent;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

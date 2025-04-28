@@ -30,6 +30,11 @@ Widget::bottom()->add()->handler(\Controllers\_BaseController_\Widgets\IndexWidg
 
 Widget::footer()->add()->handler(\Controllers\_BaseController_\Widgets\IndexWidget::class, 'execute', '"footer" widget position');
 
+Widget::body()->add()->handler(\Controllers\_BaseController_\Widgets\IndexWidget::class, 'execute', '"body" widget position');
+
+Widget::_BaseController_Top()->add()->handler(\Controllers\_BaseController_\Widgets\IndexWidget::class, 'execute', '"_BaseController_Top" widget position');
+Widget::_BaseController_Bottom()->add()->handler(\Controllers\_BaseController_\Widgets\IndexWidget::class, 'execute', '"_BaseController_Bottom" widget position');
+
 Widget::footer()->add()->handler(\Controllers\_BaseController_\Widgets\IndexWidget::class, 'debugWidget')
     ->template('Controllers/_BaseController_/Widgets/DebugWidget.html');
 

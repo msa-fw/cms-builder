@@ -2,28 +2,12 @@
 
 namespace filesystem;
 
-use function console\isCommandLineInterface;
-use System\Core\Config;
-
 function makeDirectory($directoryPath, $chmod = 0755)
 {
     if(!is_dir($directoryPath) && !is_file($directoryPath)){
         return mkdir($directoryPath, $chmod, true);
     }
     return true;
-}
-
-function getTmpPath($appendSuffixPath = '')
-{
-    if($appendSuffixPath){
-        $appendSuffixPath = '/' . trim($appendSuffixPath, '/');
-    }
-
-    $configTempPathDirKey = "tmpWebDirectory";
-    if(isCommandLineInterface() || defined('FAKE_COMMAND_LINE_INTERFACE')){
-        $configTempPathDirKey = "tmpDirectory";
-    }
-    return Config::general($configTempPathDirKey)->read() . $appendSuffixPath;
 }
 
 function copyFilesRecursive($target, $destination, callable $callback = null, $chmod = 0755)

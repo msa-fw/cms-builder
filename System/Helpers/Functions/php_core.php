@@ -8,6 +8,7 @@ if(!function_exists('apache_request_headers')){
             if(strpos($key, 'HTTP_') === 0){
                 $key = substr($key, 5);
                 $key = str_replace('_', '-', $key);
+                $key = mb_strtolower($key);
                 $result[$key] = trim($value);
             }
         }

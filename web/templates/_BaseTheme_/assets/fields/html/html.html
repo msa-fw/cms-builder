@@ -24,5 +24,5 @@ if(file_exists($wysiwyg)){
 ?>
 
 <div class="field html-field html-field-<?php print $field['attributes']['class'] ?> <?php print $field['type'] ?>-field">
-    <textarea id="<?php print $fieldId ?>" name="<?php print $fieldName ?>" <?php print attributes2string($field['attributes']) ?>></textarea>
+    <textarea id="<?php print $fieldId ?>" name="<?php print $fieldName ?>" <?php print attributes2string($field['attributes']) ?>><?php print $value ?></textarea>
 </div>

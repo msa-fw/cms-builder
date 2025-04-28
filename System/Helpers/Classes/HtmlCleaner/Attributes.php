@@ -123,7 +123,17 @@ class Attributes
     public function option($key, $value)
     {
         $key = mb_strtolower($key);
-        $this->tags[$this->tag]['opts'][$key] = $value;
+        $this->tags[$this->tag]['options'][$key] = $value;
         return $this;
+    }
+
+    public function node(callable $callback = null)
+    {
+        return $this->option('node', $callback);
+    }
+
+    public function text(callable $callback = null)
+    {
+        return $this->option('text', $callback);
     }
 }

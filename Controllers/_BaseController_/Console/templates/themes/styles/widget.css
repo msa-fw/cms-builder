@@ -12,9 +12,6 @@
   align-items: center;
   justify-content: space-evenly;
 }
-.widget.widget-header {
-  margin-top: 4px;
-}
 .widget.widget-header .widget-block .widget-content {
   background: #0057ae;
   color: #fff;

@@ -25,7 +25,7 @@ $form = Response::response('form');
 ?>
 
 <?php if(Widget::_BaseController_Top()->render()->set($widget)->exist()){ ?>
-    <div class="widget-block widget-_BaseController_-top">
+    <div class="widget widget-block widget-_BaseController_-top">
         <?php $widget->print() ?>
     </div>
 <?php } ?>
@@ -38,19 +38,21 @@ $form = Response::response('form');
         </div>
     <?php }) ?>
 
-    <div class="controller-form">
-        <?php print $render->renderForm($form) ?>
-    </div>
+    <?php if($form = $render->renderForm($form)){ ?>
+        <div class="controller-form">
+            <?php print $form ?>
+        </div>
+    <?php } ?>
 
     <?php if(Widget::body()->render()->set($widget)->exist()){ ?>
-        <div class="widget-block widget-body">
+        <div class="widget widget-block widget-body">
             <?php $widget->print() ?>
         </div>
     <?php } ?>
 </div>
 
 <?php if(Widget::_BaseController_Bottom()->render()->set($widget)->exist()){ ?>
-    <div class="widget-block widget-_BaseController_-bottom">
+    <div class="widget widget-block widget-_BaseController_-bottom">
         <?php $widget->print() ?>
     </div>
 <?php } ?>

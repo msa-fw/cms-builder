@@ -32,9 +32,7 @@ class ServerCommand
             ->string(true)->replace_k2v(array('%host%' => $host, '%port%' => $port)))->print();
         warning(Language::_BaseController_('console.server.startedEscape')->returnKey())->print(PHP_EOL . str_repeat('.', 50) . PHP_EOL);
 
-        $php = isset($_SERVER['_']) ? $_SERVER['_'] : 'php';
-        shell_exec("$php -S $host:$port server.php");
-
+        shell_exec(PHP_BINARY . " -S $host:$port server.php");
         return true;
     }
 }

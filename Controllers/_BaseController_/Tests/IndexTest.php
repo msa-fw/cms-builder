@@ -8,7 +8,6 @@ use System\Helpers\Classes\HashHmac;
 use Controllers\_BaseController_\Config;
 
 use function console\paint;
-
 use function strings\generate;
 
 class IndexTest
