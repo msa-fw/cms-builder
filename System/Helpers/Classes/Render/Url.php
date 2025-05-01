@@ -2,6 +2,7 @@
 
 namespace System\Helpers\Classes\Render;
 
+use function response\buildQuery;
 use System\Core\Response;
 use System\Core\Router;
 
@@ -18,6 +19,8 @@ class Url
     protected $params = array();
 
     protected $query = array();
+
+    protected $union = true;
 
     public function __construct($controllerAction, ...$params)
     {
@@ -47,11 +50,13 @@ class Url
 
     /**
      * @param array $query
+     * @param bool $unionRequest
      * @return Url
      */
-    public function query(array $query)
+    public function query(array $query, $unionRequest = true)
     {
         $this->query = $query;
+        $this->union = $unionRequest;
         return $this;
     }
 
@@ -78,7 +83,7 @@ class Url
         }
 
         if($this->query){
-            $result[] = "?" . http_build_query($this->query);
+            $result[] = buildQuery($this->query, $this->union);
         }
 
         $this->result = implode('', $result);

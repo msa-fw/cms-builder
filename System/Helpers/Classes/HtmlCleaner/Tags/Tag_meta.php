@@ -15,6 +15,6 @@ class Tag_meta extends Attributes
 {
     public function httpEquiv(callable $callback = null)
     {
-        return $this->attr('http-equiv', $callback);
+        return $this->attribute('http-equiv', $callback);
     }
 }

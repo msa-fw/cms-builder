@@ -12,6 +12,8 @@ use System\Helpers\Classes\Fs;
 use Controllers\_BaseController_\Widget;
 use System\Core\Template\Render\HTML;
 
+use function templates\paginate;
+
 HTML::addJs(Fs::site()->theme('Controllers/_BaseController_/scripts/_BaseController_'));
 HTML::addCss(Fs::site()->theme('Controllers/_BaseController_/styles/_BaseController_'));
 
@@ -50,6 +52,9 @@ $form = Response::response('form');
         </div>
     <?php } ?>
 </div>
+
+<?php $pagination = Response::response('paginate')->read() ?>
+<?php paginate($pagination) ?>
 
 <?php if(Widget::_BaseController_Bottom()->render()->set($widget)->exist()){ ?>
     <div class="widget widget-block widget-_BaseController_-bottom">

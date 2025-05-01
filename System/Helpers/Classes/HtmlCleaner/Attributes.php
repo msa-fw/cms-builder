@@ -103,20 +103,20 @@ class Attributes
 
     public function __call($name, $arguments)
     {
-        return $this->attr($name, ...$arguments);
+        return $this->attribute($name, ...$arguments);
     }
 
     public function __construct($tag, &$tags)
     {
         $this->tag = $tag;
         $this->tags = &$tags;
-        $this->tags[$this->tag]['attr'] = array();
+        $this->tags[$this->tag]['attribute'] = array();
     }
 
-    public function attr($attribute, callable $callback = null)
+    public function attribute($attribute, callable $callback = null)
     {
         $attribute = mb_strtolower($attribute);
-        $this->tags[$this->tag]['attr'][$attribute] = $callback;
+        $this->tags[$this->tag]['attribute'][$attribute] = $callback;
         return $this;
     }
 

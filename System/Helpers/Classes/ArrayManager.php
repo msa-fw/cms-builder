@@ -7,6 +7,15 @@ use System\Helpers\Classes\ArrayManager\_String;
 
 class ArrayManager
 {
+    const TYPE_BOOL = 'boolean';
+    const TYPE_INT = 'integer';
+    const TYPE_FLOAT = 'float';
+    const TYPE_DOUBLE = 'double';
+    const TYPE_STRING = 'string';
+    const TYPE_ARRAY = 'array';
+    const TYPE_OBJECT = 'object';
+    const TYPE_NULL = 'null';
+
     protected $key;
 
     protected $subject;
@@ -90,6 +99,13 @@ class ArrayManager
 
     public function call(callable $callback, ...$args)
     {
-        return call_user_func($callback, $this->subject, ...$args);
+        $this->subject = call_user_func($callback, $this->subject, ...$args);
+        return $this;
+    }
+
+    public function type($type = ArrayManager::TYPE_STRING)
+    {
+        settype($this->subject, $type);
+        return $this;
     }
 }

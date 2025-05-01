@@ -1,0 +1,76 @@
+<?php
+
+use System\Core\Language;
+
+use function response\buildQuery;
+
+/**
+ * @var array $data
+ * @var string $url
+ * @var boolean $union
+ * @var integer $total
+ * @var integer $limit
+ * @var integer $offset
+ * @var boolean $decodeUrl
+ */
+
+$query = array();
+if($union){
+    $query = $_GET;
+}
+$query['offset'] = $offset;
+
+?>
+
+<div class="pagination">
+    <div class="paginate">
+        <?php if($total > $limit){ ?>
+
+            <?php if($query['offset']){ ?>
+                <?php unset($query['offset']) ?>
+                <a class="paginate-link" href="<?php print $url ?><?php print buildQuery($query, $decodeUrl) ?>">
+                    <?php print Language::System('pagination.link.first.value')->read() ?>
+                </a>
+            <?php }else{ ?>
+                <span class="paginate-link active">
+                <?php print Language::System('pagination.link.first.value')->read() ?>
+            </span>
+            <?php } ?>
+
+            <?php $last = $total-$limit ?>
+            <?php $start = ($offset/$limit) ?>
+            <?php if($start < 2){ $start = 2;} ?>
+
+            <?php for($page = $start-2; $page <= $start+3; $page++){ ?>
+                <?php if(!$page){ continue; } ?>
+
+                <?php $query['offset'] = $page * $limit ?>
+                <?php $pageNumber = $query['offset']+$limit ?>
+                <?php $pageNumber = ceil($pageNumber/$limit) ?>
+
+                <?php if($offset == $query['offset']){ ?>
+                    <span class="paginate-link active"><?php print $pageNumber ?></span>
+                <?php }else{ ?>
+                    <?php $link = $url . buildQuery($query, $decodeUrl) ?>
+                    <a class="paginate-link" href="<?php print $link ?>"><?php print $pageNumber ?></a>
+                <?php } ?>
+
+                <?php if($query['offset'] > $last){ break; } ?>
+
+            <?php } ?>
+
+            <?php if($last > $offset){ ?>
+                <?php $query['offset'] = $last ?>
+                <a class="paginate-link" href="<?php print $url ?><?php print buildQuery($query, $decodeUrl) ?>">
+                    <?php print Language::System('pagination.link.last.value')->read() ?>
+                </a>
+            <?php }else{ ?>
+                <?php if($query['offset'] < $last){ ?>
+                    <span class="paginate-link active">
+                        <?php print Language::System('pagination.link.last.value')->read() ?>
+                    </span>
+                <?php } ?>
+            <?php } ?>
+        <?php } ?>
+    </div>
+</div>

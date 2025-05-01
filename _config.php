@@ -4,6 +4,7 @@ use System\Core\Config;
 
 Config::general('debug')->write(true);
 Config::general('language')->write('ru');
+Config::general('paginateLimit')->write(30);
 Config::general('tmpDirectory')->write('../cli_tmp');       // difference with linux access rules
 Config::general('tmpWebDirectory')->write('../web_tmp');    // difference with linux access rules
 

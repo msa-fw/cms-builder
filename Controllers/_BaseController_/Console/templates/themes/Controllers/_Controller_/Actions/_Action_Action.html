@@ -12,6 +12,8 @@ use System\Helpers\Classes\Fs;
 use Controllers\_Controller_\Widget;
 use System\Core\Template\Render\HTML;
 
+use function templates\paginate;
+
 HTML::addJs(Fs::site()->theme('Controllers/_Controller_/scripts/_Controller_'));
 HTML::addCss(Fs::site()->theme('Controllers/_Controller_/styles/_Controller_'));
 
@@ -25,7 +27,7 @@ $form = Response::response('form');
 ?>
 
 <?php if(Widget::_Controller_Top()->render()->set($widget)->exist()){ ?>
-    <div class="widget-block widget-_Controller_-top">
+    <div class="widget widget-block widget-_Controller_-top">
         <?php $widget->print() ?>
     </div>
 <?php } ?>
@@ -34,23 +36,28 @@ $form = Response::response('form');
 <div id="_Controller_-_Action_Action" class="action-content-block controller-content">
     <?php $content->array()->loop(function($item)use($render){ ?>
         <div class="item">
-<!--            --><?php //print $item['id'] ?><!-- (--><?php //print $item['name'] ?><!--): --><?php //print $render->simpleVariable; ?>
+            <?php print $item['id'] ?> (<?php print $item['name'] ?>): <?php print $render->simpleVariable; ?>
         </div>
     <?php }) ?>
 
-    <div class="controller-form">
-        <?php print $render->renderForm($form) ?>
-    </div>
+    <?php if($form = $render->renderForm($form)){ ?>
+        <div class="controller-form">
+            <?php print $form ?>
+        </div>
+    <?php } ?>
 
     <?php if(Widget::body()->render()->set($widget)->exist()){ ?>
-        <div class="widget-block widget-body">
+        <div class="widget widget-block widget-body">
             <?php $widget->print() ?>
         </div>
     <?php } ?>
 </div>
 
+<?php $pagination = Response::response('paginate')->read() ?>
+<?php paginate($pagination) ?>
+
 <?php if(Widget::_Controller_Bottom()->render()->set($widget)->exist()){ ?>
-    <div class="widget-block widget-_Controller_-bottom">
+    <div class="widget widget-block widget-_Controller_-bottom">
         <?php $widget->print() ?>
     </div>
 <?php } ?>

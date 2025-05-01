@@ -2,6 +2,7 @@
 
 namespace Controllers\_Controller_\Actions;
 
+use System\Core\Form\Fields;
 use Controllers\_Controller_\Controller;
 use Controllers\_Controller_\Forms\_Action_Form;
 use Controllers\_Controller_\Models\_Action_Model;
@@ -13,6 +14,10 @@ class _Action_Action extends Controller
 {
     /** @var  _Action_Form */
     protected $form;
+
+    protected $limit = 10;
+
+    protected $offset = 0;
 
     public function __construct(RouterGetterInterface $router)
     {
@@ -27,8 +32,14 @@ class _Action_Action extends Controller
 
     public function get()
     {
-        $this->content->write($this->model->selectList(30));
+        if($items = $this->model->selectList($this->limit, $this->offset)){
+            $this->paginate($this->model->total());
+            $this->content->write($items);
+        }
 
+        $this->form->create('', function(Fields $field){
+            $field->html('d')->wysiwyg();
+        });
         return $this->setForm();
     }
 

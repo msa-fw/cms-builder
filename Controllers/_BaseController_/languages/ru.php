@@ -283,3 +283,8 @@ Language::System('wysiwyg.default.value.video')->write('видео');
 Language::System('input.title.placeholder')->write('текст ссылки (не обязательно)...');
 Language::System('input.href.placeholder')->write('URL ссылки');
 
+Language::System('pagination.link.prev.value')->write('< предыдущая');
+Language::System('pagination.link.next.value')->write('следующая >');
+Language::System('pagination.link.first.value')->write('<< начало');
+Language::System('pagination.link.last.value')->write('конец >>');
+

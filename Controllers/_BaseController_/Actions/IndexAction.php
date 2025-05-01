@@ -2,6 +2,7 @@
 
 namespace Controllers\_BaseController_\Actions;
 
+use function response\url;
 use System\Core\Form\Fields;
 use Controllers\_BaseController_\Controller;
 use Controllers\_BaseController_\Forms\IndexForm;
@@ -12,6 +13,10 @@ class IndexAction extends Controller
 {
     /** @var  IndexForm */
     protected $form;
+
+    protected $limit = 10;
+
+    protected $offset = 0;
 
     public function __construct(RouterGetterInterface $router)
     {
@@ -24,6 +29,11 @@ class IndexAction extends Controller
 
     public function get()
     {
+        if($items = $this->model->selectList($this->limit, $this->offset)){
+            $this->paginate($this->model->total());
+            $this->content->write($items);
+        }
+
         $this->form->create('', function(Fields $field){
             $field->html('d')->wysiwyg();
         });
@@ -32,7 +42,13 @@ class IndexAction extends Controller
 
     public function post()
     {
-        return $this;
+        $this->form->validate();
+
+        if($this->form->valid()){
+            url(self::class)->build()->redirect();
+        }
+
+        return $this->setForm();
     }
 
     public function head()

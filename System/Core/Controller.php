@@ -2,12 +2,17 @@
 
 namespace System\Core;
 
+use System\Core\Response\Builders\Pagination;
 use System\Core\Router\RouterGetterInterface;
 use System\Core\Form\Interfaces\FormInterface;
 use System\Helpers\Classes\ArrayManager;
 
 class Controller
 {
+    protected $limit = 30;
+
+    protected $offset = 0;
+
     protected $model;
     /** @var  FormInterface */
     protected $form;
@@ -33,6 +38,9 @@ class Controller
         $this->router = $router;
         $this->content = Response::response('content');
         $this->controller = Response::response('controller');
+
+        $this->limit = Config::general('paginateLimit')->read($this->limit);
+        $this->offset = Request::request('offset')->type(ArrayManager::TYPE_INT)->read($this->offset);
 
         $this->setBaseResponseInfoOfController();
     }
@@ -60,5 +68,12 @@ class Controller
             ->write($this->form->getForm());
 
         return $this;
+    }
+
+    protected function paginate($total)
+    {
+        $pagination = new Pagination($this->limit, $this->offset);
+        $pagination->totalItems($total);
+        return $pagination;
     }
 }

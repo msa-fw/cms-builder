@@ -20,6 +20,7 @@ namespace System\Helpers\Classes\HtmlCleaner;
  * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_bdi bdi($removeTagWithoutAttributes = false, $removeEmptyTag = true)
  * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_bdo bdo($removeTagWithoutAttributes = false, $removeEmptyTag = true)
  * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_big big($removeTagWithoutAttributes = false, $removeEmptyTag = true)
+ * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_quote quote($removeTagWithoutAttributes = false, $removeEmptyTag = true)
  * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_blockquote blockquote($removeTagWithoutAttributes = false, $removeEmptyTag = true)
  * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_body body($removeTagWithoutAttributes = false, $removeEmptyTag = true)
  * @method \System\Helpers\Classes\HtmlCleaner\Tags\Tag_br br($removeTagWithoutAttributes = false, $removeEmptyTag = true)

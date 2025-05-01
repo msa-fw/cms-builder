@@ -20,6 +20,6 @@ class Tag_form extends Attributes
 {
     public function acceptCharset(callable $callback = null)
     {
-        return $this->attr('accept-charset', $callback);
+        return $this->attribute('accept-charset', $callback);
     }
 }

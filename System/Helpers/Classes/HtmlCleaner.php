@@ -5,8 +5,6 @@ namespace System\Helpers\Classes;
 use DOMDocument, DOMXPath, DOMAttr;
 use System\Helpers\Classes\HtmlCleaner\Builder;
 
-use function response\compressHtml;
-
 class HtmlCleaner
 {
     protected $content;
@@ -42,6 +40,12 @@ class HtmlCleaner
         'frame'     => true,
     );
 
+    protected $replaceEol = '';
+
+    protected $line2p = false;
+
+    protected $line2pDropEmptyLines = true;
+
     protected $errors = array();
 
     public function __construct($content, $useInternalErrors = true)
@@ -73,6 +77,19 @@ class HtmlCleaner
     public function removeComments($trigger = true)
     {
         $this->removeComments = $trigger;
+        return $this;
+    }
+
+    public function line2p($trigger = true, $dropEmptyLines = false)
+    {
+        $this->line2p = $trigger;
+        $this->line2pDropEmptyLines = $dropEmptyLines;
+        return $this;
+    }
+
+    public function replaceEol($replacement = '<br>$1')
+    {
+        $this->replaceEol = $replacement;
         return $this;
     }
 
@@ -173,7 +190,7 @@ class HtmlCleaner
          * @fix Quote tags in JSON structure (expl: `wysiwyg.addLang('[{"<h1></h1>"}]')`)
          * @see Attributes::text() - use callback for customize if needed
          */
-        return htmlspecialchars(trim($node->textContent));
+        return $this->prepareTextResult($node->textContent);
     }
 
     protected function checkRemovableTag($child, $parent, array $options)
@@ -244,9 +261,9 @@ class HtmlCleaner
             foreach($node->attributes as $attrIndex => $attribute){
                 $attrName = mb_strtolower($attribute->nodeName);
 
-                if(!array_key_exists($attrName, $definedTagsList[$name]['attr'])){ continue; }
+                if(!array_key_exists($attrName, $definedTagsList[$name]['attribute'])){ continue; }
 
-                if($valid = $this->validateAttribute($node, $attribute, $definedTagsList[$name]['attr'][$attrName])){
+                if($valid = $this->validateAttribute($node, $attribute, $definedTagsList[$name]['attribute'][$attrName])){
                     $attributes[] = $valid;
                 }
             }
@@ -284,5 +301,26 @@ class HtmlCleaner
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    protected function prepareTextResult($result)
+    {
+        $result = trim($result);
+        $result = htmlspecialchars($result);
+
+        if($this->line2p){
+            $result = preg_replace_callback("#(.*?)(\r\n|\n|$)#usim", function($f){
+                if(!$f[1] && $this->line2pDropEmptyLines){
+                    return '';
+                }
+                return "<p>{$f[1]}</p>\n";
+            }, $result);
+        }
+
+        if($this->replaceEol){
+            $result = preg_replace("#(\r\n|\n)#usim", $this->replaceEol, $result);
+        }
+
+        return $result;
     }
 }

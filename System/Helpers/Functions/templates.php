@@ -2,7 +2,10 @@
 
 namespace templates;
 
+use System\Helpers\Classes\Fs;
 use System\Helpers\Classes\Render\Modal;
+
+use function web\render;
 
 function modal($modalLinkValue)
 {
@@ -28,4 +31,16 @@ function attributes2string(array $attributes, $skipEmptyValues = true, ...$skips
         $result[] = "{$key}=\"$value\"";
     }
     return implode(' ', $result);
+}
+
+function paginate($pagination, $printOutput = true)
+{
+    if($pagination){
+        $template = Fs::server()->theme($pagination['template']);
+        if(file_exists($template)){
+            $output = render($template, $pagination);
+            return $printOutput ? print($output) : $output;
+        }
+    }
+    return '';
 }

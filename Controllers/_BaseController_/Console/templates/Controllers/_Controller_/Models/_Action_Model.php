@@ -21,10 +21,18 @@ class _Action_Model extends Model
     // $this->cache->key('setCustomPredefinedStaticCacheKeyName');
     protected $cacheKeyPath = '_Controller_._Action_';
 
+    public function total()
+    {
+        $query = $this->table->count('id')->get();
+        if($result = $this->findOneInCache($query)->array()){
+            return $result['id'];
+        }
+        return 0;
+    }
+
     public function selectList($limit, $offset = 0)
     {
         $query = $this->table->select('*')
-            ->where('id', '>', 30)
             ->order('id', 'asc')
             ->limit($limit, $offset)->get();
 

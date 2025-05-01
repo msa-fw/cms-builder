@@ -49,6 +49,37 @@ body{
                                     &.error-500 {
                                     }
                                 }
+                                .pagination{
+                                    width: 100%;
+                                    margin: 1em 0;
+                                    user-select: none;
+                                    .paginate{
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: space-evenly;
+                                        a{
+                                            &:hover{
+                                                color: @bootstrap-white;
+                                                background: @generalColor;
+                                            }
+                                        }
+                                        .paginate-link{
+                                            width: 100%;
+                                            text-align: center;
+                                            font-weight: bold;
+                                            border: solid 1px @generalColor;
+                                            text-decoration: none;
+                                            padding: 4px 0;
+                                            color: @generalColor;
+                                            &.active{
+                                                font-weight: bold;
+                                                color: @bootstrap-white;
+                                                background: @bootstrap-success;
+                                                border: solid 1px @bootstrap-success;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             .controller-content{
                                 &.action-content-block{

@@ -39,6 +39,35 @@ body.body-container .content.content-block .controller.controller-block .action.
   font-size: 25px;
   color: #6c757d;
 }
+body.body-container .content.content-block .controller.controller-block .action.action-block .pagination {
+  width: 100%;
+  margin: 1em 0;
+  user-select: none;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .pagination .paginate {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .pagination .paginate a:hover {
+  color: #fff;
+  background: #0057ae;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .pagination .paginate .paginate-link {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  border: solid 1px #0057ae;
+  text-decoration: none;
+  padding: 4px 0;
+  color: #0057ae;
+}
+body.body-container .content.content-block .controller.controller-block .action.action-block .pagination .paginate .paginate-link.active {
+  font-weight: bold;
+  color: #fff;
+  background: #28a745;
+  border: solid 1px #28a745;
+}
 body.body-container .content.content-block .controller.controller-block .action .controller-content.action-content-block {
   margin: 0;
   min-height: 640px;
